@@ -22,7 +22,7 @@ export const franchisesRouter = {
 				const existing = await db
 					.select()
 					.from(franchises)
-					.where(eq(franchises.name, input.name))
+					.where(eq(franchises.name, input.name.trim()))
 					.limit(1);
 
 				if (existing.length > 0) {
@@ -33,7 +33,7 @@ export const franchisesRouter = {
 				const [newFranchise] = await db
 					.insert(franchises)
 					.values({
-						name: input.name,
+						name: input.name.trim(),
 					})
 					.returning();
 

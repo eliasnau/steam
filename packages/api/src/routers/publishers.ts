@@ -22,7 +22,7 @@ export const publishersRouter = {
 				const existing = await db
 					.select()
 					.from(publishers)
-					.where(eq(publishers.name, input.name))
+					.where(eq(publishers.name, input.name.trim()))
 					.limit(1);
 
 				if (existing.length > 0) {
@@ -33,7 +33,7 @@ export const publishersRouter = {
 				const [newPublisher] = await db
 					.insert(publishers)
 					.values({
-						name: input.name,
+						name: input.name.trim(),
 					})
 					.returning();
 
@@ -46,6 +46,7 @@ export const publishersRouter = {
 					publisher: newPublisher,
 				};
 			} catch (error) {
+				if (error instanceof ORPCError) throw error;
 				console.error("Error creating publisher:", error);
 
 				throw new ORPCError("INTERNAL_SERVER_ERROR", {
