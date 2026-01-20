@@ -6,8 +6,10 @@ import {
 	gameToCategories,
 	gameToGenres,
 	gameToOperatingSystems,
+	gameToTags,
 	genres,
 	operatingSystems,
+	tags,
 } from "@repo/db/schema/index";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure } from "../index";
@@ -44,6 +46,7 @@ export const gamesRouter = {
 				operatingSystems: z
 					.array(z.string().uuid("Ungültige Betriebssystem-ID"))
 					.optional(),
+				tags: z.array(z.string().uuid("Ungültige Tag-ID")).optional(),
 
 				franchiseId: z.string().uuid("Ungültige Franchise-ID").optional(),
 			}),
@@ -62,7 +65,8 @@ export const gamesRouter = {
 					});
 				}
 
-				const [genreRecords, categoryRecords, osRecords] = await Promise.all([
+				const [genreRecords, categoryRecords, osRecords, tagRecords] =
+					await Promise.all([
 					input.genres && input.genres.length > 0
 						? db
 								.select({ id: genres.id })
@@ -80,6 +84,12 @@ export const gamesRouter = {
 								.select({ id: operatingSystems.id })
 								.from(operatingSystems)
 								.where(inArray(operatingSystems.id, input.operatingSystems))
+						: Promise.resolve([]),
+					input.tags && input.tags.length > 0
+						? db
+								.select({ id: tags.id })
+								.from(tags)
+								.where(inArray(tags.id, input.tags))
 						: Promise.resolve([]),
 				]);
 
@@ -128,6 +138,20 @@ export const gamesRouter = {
 						missingItems.push(
 							`Betriebssysteme mit IDs: ${missingOSIds.join(", ")}`,
 						);
+					}
+				}
+
+				if (
+					input.tags &&
+					input.tags.length > 0 &&
+					tagRecords.length !== input.tags.length
+				) {
+					const foundTagIds = tagRecords.map((t) => t.id);
+					const missingTagIds = input.tags.filter(
+						(id) => !foundTagIds.includes(id),
+					);
+					if (missingTagIds.length > 0) {
+						missingItems.push(`Tags mit IDs: ${missingTagIds.join(", ")}`);
 					}
 				}
 
@@ -180,6 +204,15 @@ export const gamesRouter = {
 							osRecords.map((os) => ({
 								gameId: insertedGame.id,
 								operatingSystemId: os.id,
+							})),
+						);
+					}
+
+					if (tagRecords.length > 0) {
+						await tx.insert(gameToTags).values(
+							tagRecords.map((tag) => ({
+								gameId: insertedGame.id,
+								tagId: tag.id,
 							})),
 						);
 					}

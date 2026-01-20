@@ -129,6 +129,18 @@ export const developers = pgTable("developers", {
 		.notNull(),
 });
 
+export const tags = pgTable("tags", {
+	id: uuid("id").defaultRandom().primaryKey(),
+
+	name: text("name").notNull(),
+
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	updatedAt: timestamp("updated_at")
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull(),
+});
+
 export const gameToGenres = pgTable(
 	"game_to_genres",
 	{
@@ -205,4 +217,17 @@ export const gameToDevelopers = pgTable(
 			.references(() => developers.id),
 	},
 	(table) => [primaryKey({ columns: [table.gameId, table.developerId] })],
+);
+
+export const gameToTags = pgTable(
+	"game_to_tags",
+	{
+		gameId: uuid("game_id")
+			.notNull()
+			.references(() => game.id),
+		tagId: uuid("tag_id")
+			.notNull()
+			.references(() => tags.id),
+	},
+	(table) => [primaryKey({ columns: [table.gameId, table.tagId] })],
 );
