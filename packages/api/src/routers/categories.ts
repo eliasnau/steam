@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/server";
-import { db } from "@repo/db";
+import { db, eq } from "@repo/db";
 import { categories } from "@repo/db/schema/index";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure } from "../index";
@@ -18,6 +18,17 @@ export const categoriesRouter = {
 		)
 		.handler(async ({ input }) => {
 			try {
+				const existing = await db
+					.select()
+					.from(categories)
+					.where(eq(categories.name, input.name))
+					.limit(1);
+
+				if (existing.length > 0) {
+					throw new ORPCError("BAD_REQUEST", {
+						message: "Diese Kategorie existiert bereits.",
+					});
+				}
 				const [newCategory] = await db
 					.insert(categories)
 					.values({
