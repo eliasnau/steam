@@ -2,13 +2,17 @@ import { ORPCError } from "@orpc/server";
 import { db, eq, inArray } from "@repo/db";
 import {
 	categories,
+	developers,
 	game,
 	gameToCategories,
+	gameToDevelopers,
 	gameToGenres,
 	gameToOperatingSystems,
 	gameToTags,
 	genres,
 	operatingSystems,
+	publishers,
+	publishersToGame,
 	tags,
 } from "@repo/db/schema/index";
 import { z } from "zod";
@@ -47,6 +51,8 @@ export const gamesRouter = {
 					.array(z.string().uuid("Ungültige Betriebssystem-ID"))
 					.optional(),
 				tags: z.array(z.string().uuid("Ungültige Tag-ID")).optional(),
+				developers: z.array(z.string().uuid("Ungültige Entwickler-ID")).optional(),
+				publishers: z.array(z.string().uuid("Ungültige Publisher-ID")).optional(),
 
 				franchiseId: z.string().uuid("Ungültige Franchise-ID").optional(),
 			}),
@@ -65,8 +71,14 @@ export const gamesRouter = {
 					});
 				}
 
-				const [genreRecords, categoryRecords, osRecords, tagRecords] =
-					await Promise.all([
+				const [
+					genreRecords,
+					categoryRecords,
+					osRecords,
+					tagRecords,
+					developerRecords,
+					publisherRecords,
+				] = await Promise.all([
 					input.genres && input.genres.length > 0
 						? db
 								.select({ id: genres.id })
@@ -90,6 +102,18 @@ export const gamesRouter = {
 								.select({ id: tags.id })
 								.from(tags)
 								.where(inArray(tags.id, input.tags))
+						: Promise.resolve([]),
+					input.developers && input.developers.length > 0
+						? db
+								.select({ id: developers.id })
+								.from(developers)
+								.where(inArray(developers.id, input.developers))
+						: Promise.resolve([]),
+					input.publishers && input.publishers.length > 0
+						? db
+								.select({ id: publishers.id })
+								.from(publishers)
+								.where(inArray(publishers.id, input.publishers))
 						: Promise.resolve([]),
 				]);
 
@@ -155,6 +179,38 @@ export const gamesRouter = {
 					}
 				}
 
+				if (
+					input.developers &&
+					input.developers.length > 0 &&
+					developerRecords.length !== input.developers.length
+				) {
+					const foundDeveloperIds = developerRecords.map((d) => d.id);
+					const missingDeveloperIds = input.developers.filter(
+						(id) => !foundDeveloperIds.includes(id),
+					);
+					if (missingDeveloperIds.length > 0) {
+						missingItems.push(
+							`Entwickler mit IDs: ${missingDeveloperIds.join(", ")}`,
+						);
+					}
+				}
+
+				if (
+					input.publishers &&
+					input.publishers.length > 0 &&
+					publisherRecords.length !== input.publishers.length
+				) {
+					const foundPublisherIds = publisherRecords.map((p) => p.id);
+					const missingPublisherIds = input.publishers.filter(
+						(id) => !foundPublisherIds.includes(id),
+					);
+					if (missingPublisherIds.length > 0) {
+						missingItems.push(
+							`Publisher mit IDs: ${missingPublisherIds.join(", ")}`,
+						);
+					}
+				}
+
 				if (missingItems.length > 0) {
 					throw new ORPCError("BAD_REQUEST", {
 						message: `Die folgenden Elemente existieren nicht: ${missingItems.join("; ")}`,
@@ -213,6 +269,24 @@ export const gamesRouter = {
 							tagRecords.map((tag) => ({
 								gameId: insertedGame.id,
 								tagId: tag.id,
+							})),
+						);
+					}
+
+					if (developerRecords.length > 0) {
+						await tx.insert(gameToDevelopers).values(
+							developerRecords.map((developer) => ({
+								gameId: insertedGame.id,
+								developerId: developer.id,
+							})),
+						);
+					}
+
+					if (publisherRecords.length > 0) {
+						await tx.insert(publishersToGame).values(
+							publisherRecords.map((publisher) => ({
+								gameId: insertedGame.id,
+								publisherId: publisher.id,
 							})),
 						);
 					}

@@ -3,6 +3,7 @@ import { db } from "@repo/db";
 import { operatingSystems } from "@repo/db/schema/index";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure } from "../index";
+import { eq } from "@repo/db"
 
 export const operatingSystemsRouter = {
 	getAll: publicProcedure.handler(async () => {
@@ -18,6 +19,18 @@ export const operatingSystemsRouter = {
 		)
 		.handler(async ({ input }) => {
 			try {
+				const existing = await db
+					.select()
+					.from(operatingSystems)
+					.where(eq(operatingSystems.name, input.name))
+					.limit(1);
+
+				if (existing.length > 0) {
+					throw new ORPCError("BAD_REQUEST", {
+						message: "Dieses Betriebssystem existiert bereits.",
+					});
+				}
+
 				const [newOperatingSystem] = await db
 					.insert(operatingSystems)
 					.values({
