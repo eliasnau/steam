@@ -29,7 +29,7 @@ export default async function AdminDashboardPage() {
 			<h1 className="mb-8 font-bold text-3xl">Admin</h1>
 
 			<div className="flex flex-col gap-3">
-				<Link href="/admin/add">
+				<Link href="/admin/games/add">
 					<Button variant="outline" className="w-full justify-start" size="lg">
 						Spiel hinzufügen
 					</Button>
