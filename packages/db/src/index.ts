@@ -11,4 +11,4 @@ neonConfig.webSocketConstructor = ws;
 // neonConfig.poolQueryViaFetch = true
 
 const sql = neon(env.DATABASE_URL);
-export const db = drizzle(sql, { schema });
+export const db = drizzle(sql, { schema,  casing: 'snake_case' });
