@@ -6,7 +6,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import z from "zod";
+import DevelopersSelector from "@/components/developers-selector";
 import FranchiseSelector from "@/components/franchise-selector";
+import FeaturesSelector from "@/components/features-selector";
+import GenresSelector from "@/components/genres-selector";
+import OSSelector from "@/components/os-selector";
+import PublishersSelector from "@/components/publishers-selector";
+import TagsSelector from "@/components/tags-selector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +29,9 @@ const addGameMutation = async (data: {
 	genres?: string[];
 	features?: string[];
 	operatingSystems?: string[];
+	tags?: string[];
+	developers?: string[];
+	publishers?: string[];
 	franchiseId?: string;
 }) => {
 	const result = await client.games.create(data);
@@ -73,9 +82,12 @@ export default function AddGameForm() {
 			rating: 1,
 			franchiseId: "",
 			image: "",
-			genres: "",
-			features: "",
-			operatingSystems: "",
+			genres: [] as string[],
+			features: [] as string[],
+			operatingSystems: [] as string[],
+			tags: [] as string[],
+			developers: [] as string[],
+			publishers: [] as string[],
 		},
 		onSubmit: async ({ value }) => {
 			const data = {
@@ -86,23 +98,23 @@ export default function AddGameForm() {
 				playerCountAllTime: value.playerCountAllTime,
 				rating: value.rating,
 				image: value.image || undefined,
-				genres: value.genres
+				genres: value.genres && value.genres.length > 0
 					? value.genres
-							.split(",")
-							.map((id) => id.trim())
-							.filter((id) => id.length > 0)
 					: undefined,
-				features: value.features
+				features: value.features && value.features.length > 0
 					? value.features
-							.split(",")
-							.map((id) => id.trim())
-							.filter((id) => id.length > 0)
 					: undefined,
-				operatingSystems: value.operatingSystems
+				operatingSystems: value.operatingSystems && value.operatingSystems.length > 0
 					? value.operatingSystems
-							.split(",")
-							.map((id) => id.trim())
-							.filter((id) => id.length > 0)
+					: undefined,
+				tags: value.tags && value.tags.length > 0
+					? value.tags
+					: undefined,
+				developers: value.developers && value.developers.length > 0
+					? value.developers
+					: undefined,
+				publishers: value.publishers && value.publishers.length > 0
+					? value.publishers
 					: undefined,
 				franchiseId:
 					value.franchiseId && value.franchiseId !== ""
@@ -126,9 +138,12 @@ export default function AddGameForm() {
 					.max(6, "Bewertung darf höchstens 6 sein"),
 				franchiseId: z.string(),
 				image: z.string(),
-				genres: z.string().optional(),
-				features: z.string().optional(),
-				operatingSystems: z.string().optional(),
+				genres: z.array(z.string()).optional(),
+				features: z.array(z.string()).optional(),
+				operatingSystems: z.array(z.string()).optional(),
+				tags: z.array(z.string()).optional(),
+				developers: z.array(z.string()).optional(),
+				publishers: z.array(z.string()).optional(),
 			}),
 		},
 	});
@@ -342,18 +357,11 @@ export default function AddGameForm() {
 					<form.Field name="genres">
 						{(field) => (
 							<div className="space-y-2">
-								<Label htmlFor={field.name}>
-									Genre IDs (Optional, komma-getrennt)
-								</Label>
-								<Input
-									id={field.name}
-									name={field.name}
-									type="text"
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-									placeholder="z.B. 123e4567-e89b-12d3-a456-426614174000, 223e4567-e89b-12d3-a456-426614174001"
-									disabled={isSubmitting}
+								<GenresSelector
+									value={field.state.value || []}
+									onChange={(genreIds) => {
+										field.handleChange(genreIds);
+									}}
 								/>
 								{field.state.meta.errors.map((error) => (
 									<p key={error?.message} className="text-red-500 text-sm">
@@ -369,18 +377,11 @@ export default function AddGameForm() {
 					<form.Field name="features">
 						{(field) => (
 							<div className="space-y-2">
-								<Label htmlFor={field.name}>
-									Feature IDs (Optional, komma-getrennt)
-								</Label>
-								<Input
-									id={field.name}
-									name={field.name}
-									type="text"
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-									placeholder="z.B. 323e4567-e89b-12d3-a456-426614174000, 423e4567-e89b-12d3-a456-426614174001"
-									disabled={isSubmitting}
+								<FeaturesSelector
+									value={field.state.value || []}
+									onChange={(categoryIds) => {
+										field.handleChange(categoryIds);
+									}}
 								/>
 								{field.state.meta.errors.map((error) => (
 									<p key={error?.message} className="text-red-500 text-sm">
@@ -396,18 +397,71 @@ export default function AddGameForm() {
 					<form.Field name="operatingSystems">
 						{(field) => (
 							<div className="space-y-2">
-								<Label htmlFor={field.name}>
-									Betriebssystem IDs (Optional, komma-getrennt)
-								</Label>
-								<Input
-									id={field.name}
-									name={field.name}
-									type="text"
-									value={field.state.value}
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-									placeholder="z.B. 523e4567-e89b-12d3-a456-426614174000, 623e4567-e89b-12d3-a456-426614174001"
-									disabled={isSubmitting}
+								<OSSelector
+									value={field.state.value || []}
+									onChange={(osIds) => {
+										field.handleChange(osIds);
+									}}
+								/>
+								{field.state.meta.errors.map((error) => (
+									<p key={error?.message} className="text-red-500 text-sm">
+										{error?.message}
+									</p>
+								))}
+							</div>
+						)}
+					</form.Field>
+				</div>
+
+				<div>
+					<form.Field name="tags">
+						{(field) => (
+							<div className="space-y-2">
+								<TagsSelector
+									value={field.state.value || []}
+									onChange={(tagIds) => {
+										field.handleChange(tagIds);
+									}}
+								/>
+								{field.state.meta.errors.map((error) => (
+									<p key={error?.message} className="text-red-500 text-sm">
+										{error?.message}
+									</p>
+								))}
+							</div>
+						)}
+					</form.Field>
+				</div>
+
+				<div>
+					<form.Field name="developers">
+						{(field) => (
+							<div className="space-y-2">
+								<DevelopersSelector
+									value={field.state.value || []}
+									onChange={(developerIds) => {
+										field.handleChange(developerIds);
+									}}
+								/>
+								{field.state.meta.errors.map((error) => (
+									<p key={error?.message} className="text-red-500 text-sm">
+										{error?.message}
+									</p>
+								))}
+							</div>
+						)}
+					</form.Field>
+				</div>
+
+				<div>
+					<form.Field name="publishers">
+						{(field) => (
+							<div className="space-y-2">
+								<PublishersSelector
+									value={field.state.value || []}
+									onChange={(publisherIds) => {
+										field.handleChange(publisherIds);
+									}}
 								/>
 								{field.state.meta.errors.map((error) => (
 									<p key={error?.message} className="text-red-500 text-sm">
