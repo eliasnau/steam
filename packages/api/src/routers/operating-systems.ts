@@ -22,7 +22,7 @@ export const operatingSystemsRouter = {
 				const existing = await db
 					.select()
 					.from(operatingSystems)
-					.where(eq(operatingSystems.name, input.name))
+					.where(eq(operatingSystems.name, input.name.trim()))
 					.limit(1);
 
 				if (existing.length > 0) {
@@ -34,7 +34,7 @@ export const operatingSystemsRouter = {
 				const [newOperatingSystem] = await db
 					.insert(operatingSystems)
 					.values({
-						name: input.name,
+						name: input.name.trim(),
 					})
 					.returning();
 
@@ -47,6 +47,7 @@ export const operatingSystemsRouter = {
 					operatingSystem: newOperatingSystem,
 				};
 			} catch (error) {
+				if (error instanceof ORPCError) throw error;
 				console.error("Error creating operating system:", error);
 
 				throw new ORPCError("INTERNAL_SERVER_ERROR", {

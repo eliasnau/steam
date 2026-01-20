@@ -22,7 +22,7 @@ export const developersRouter = {
 				const existing = await db
 					.select()
 					.from(developers)
-					.where(eq(developers.name, input.name))
+					.where(eq(developers.name, input.name.trim()))
 					.limit(1);
 
 				if (existing.length > 0) {
@@ -33,7 +33,7 @@ export const developersRouter = {
 				const [newDeveloper] = await db
 					.insert(developers)
 					.values({
-						name: input.name,
+						name: input.name.trim(),
 					})
 					.returning();
 
@@ -46,6 +46,7 @@ export const developersRouter = {
 					developer: newDeveloper,
 				};
 			} catch (error) {
+				if (error instanceof ORPCError) throw error;
 				console.error("Error creating developer:", error);
 
 				throw new ORPCError("INTERNAL_SERVER_ERROR", {

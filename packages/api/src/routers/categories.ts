@@ -21,7 +21,7 @@ export const categoriesRouter = {
 				const existing = await db
 					.select()
 					.from(categories)
-					.where(eq(categories.name, input.name))
+					.where(eq(categories.name, input.name.trim()))
 					.limit(1);
 
 				if (existing.length > 0) {
@@ -32,7 +32,7 @@ export const categoriesRouter = {
 				const [newCategory] = await db
 					.insert(categories)
 					.values({
-						name: input.name,
+						name: input.name.trim(),
 					})
 					.returning();
 
@@ -45,6 +45,7 @@ export const categoriesRouter = {
 					category: newCategory,
 				};
 			} catch (error) {
+				if (error instanceof ORPCError) throw error;
 				console.error("Error creating category:", error);
 
 				throw new ORPCError("INTERNAL_SERVER_ERROR", {

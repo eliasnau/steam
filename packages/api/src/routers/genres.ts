@@ -22,7 +22,7 @@ export const genresRouter = {
 				const existing = await db
 					.select()
 					.from(genres)
-					.where(eq(genres.name, input.name))
+					.where(eq(genres.name, input.name.trim()))
 					.limit(1);
 
 				if (existing.length > 0) {
@@ -47,6 +47,7 @@ export const genresRouter = {
 					genre: newGenre,
 				};
 			} catch (error) {
+				if (error instanceof ORPCError) throw error;
 				console.error("Error creating genre:", error);
 
 				throw new ORPCError("INTERNAL_SERVER_ERROR", {
