@@ -82,7 +82,7 @@ export const operatingSystems = pgTable("operating_systems", {
 	id: uuid("id").defaultRandom().primaryKey(),
 
 	name: text("name").notNull(),
-	popularity: decimal("popularity").notNull(),
+	popularity: decimal("popularity"),
 
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at")
