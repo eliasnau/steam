@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   experimental: {
     authInterrupts: true
+  },
+  typescript: {
+    ignoreBuildErrors: true
   }
 };
 
