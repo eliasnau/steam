@@ -1,24 +1,27 @@
 {
-  "name": "@repo/auth",
-  "type": "module",
-  "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "default": "./src/*.ts"
-    }
-  },
-  "scripts": {},
-  "dependencies": {
-    "@repo/db": "workspace:*",
-    "@repo/env": "workspace:*",
-    "better-auth": "catalog:",
-    "dotenv": "catalog:",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@repo/config": "workspace:*",
-    "typescript": "catalog:"
-  }
+	"name": "@repo/auth",
+	"type": "module",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {
+		"generate": "dotenv -e ../../apps/web/.env -- pnpx @better-auth/cli@latest generate --config \"./src/index.ts\" --output \"../db/src/schema/auth.ts\""
+	},
+	"dependencies": {
+		"@repo/db": "workspace:*",
+		"@repo/env": "workspace:*",
+		"better-auth": "catalog:",
+		"dotenv": "catalog:",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@repo/config": "workspace:*",
+		"dotenv-cli": "^11.0.0",
+		"typescript": "catalog:"
+	}
 }
