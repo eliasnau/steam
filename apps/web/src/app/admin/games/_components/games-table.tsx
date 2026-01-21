@@ -125,8 +125,8 @@ const createColumns = (): ColumnDef<GameRow>[] => [
 		accessorKey: "price",
 		header: "Price",
 		cell: ({ row }) => {
-			const price = Number.parseFloat(row.original.price);
-			return `$${price.toFixed(2)}`;
+			const price = row.original.price ? Number.parseFloat(row.original.price).toFixed(2) : "Kostenlos";
+			return price;
 		},
 	},
 	{
