@@ -46,7 +46,6 @@ export const developersRouter = {
 
 			const totalPages = Math.ceil(totalCount / limit);
 
-			// Count games for each developer
 			const developerIds = devs.map((d) => d.id);
 			const gameCounts = new Map<string, number>();
 

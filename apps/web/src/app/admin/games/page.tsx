@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Ellipsis, Plus } from "lucide-react";
 import Link from "next/link";
 import {
 	parseAsArrayOf,
@@ -20,6 +20,14 @@ import {
 	EmptyTitle,
 } from "@/components/ui/empty";
 import { Frame, FramePanel } from "@/components/ui/frame";
+import { Group, GroupSeparator } from "@/components/ui/group";
+import {
+	Menu,
+	MenuGroup,
+	MenuItem,
+	MenuPopup,
+	MenuTrigger,
+} from "@/components/ui/menu";
 import { orpc } from "@/utils/orpc";
 import {
 	Header,
@@ -28,6 +36,7 @@ import {
 	HeaderDescription,
 	HeaderTitle,
 } from "../_components/page-header";
+import { CreateFromSteamSheet } from "./_components/create-from-steam-sheet";
 import GamesTable from "./_components/games-table";
 
 export default function GamesPage() {
@@ -102,9 +111,20 @@ function GamesPageContent() {
 					</HeaderDescription>
 				</HeaderContent>
 				<HeaderActions>
-					<Link href="/admin/games/add">
-						<Button>Neues Spiel hinzufügen</Button>
-					</Link>
+					<Group>
+						<CreateFromSteamSheet onSuccess={() => refetch()} />
+						<GroupSeparator className="bg-primary/72" />
+						<Menu>
+							<MenuTrigger render={<Button />}>
+								<Ellipsis />
+							</MenuTrigger>
+							<MenuPopup>
+								<Link href={"/admin/games/add"}>
+									<MenuItem>Manuell erstellen</MenuItem>
+								</Link>
+							</MenuPopup>
+						</Menu>
+					</Group>
 				</HeaderActions>
 			</Header>
 
