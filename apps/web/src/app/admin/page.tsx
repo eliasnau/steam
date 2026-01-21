@@ -35,6 +35,12 @@ export default async function AdminDashboardPage() {
 					</Button>
 				</Link>
 
+				<Link href="/admin/games/add">
+					<Button variant="outline" className="w-full justify-start" size="lg">
+						Spiele Liste
+					</Button>
+				</Link>
+
 				<Link href="/admin/developers">
 					<Button variant="outline" className="w-full justify-start" size="lg">
 						Developers
