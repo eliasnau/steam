@@ -22,12 +22,13 @@ export const game = pgTable(
 		name: text("name").notNull(),
 		price: decimal("price"),
 		releasedAt: date("released_at").notNull(),
-		playerCountAllTime: integer("player_count_all_time").notNull(),
 		rating: integer("rating").notNull(),
 		image: text("image"),
-    createdBy: text("created_by"),
-		
-    franchiseId: uuid("franchise_id").references(() => franchises.id),
+		shortDescription: text("short_description"),
+		website: text("website"),
+		createdBy: text("created_by"),
+
+		franchiseId: uuid("franchise_id").references(() => franchises.id),
 
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 		updatedAt: timestamp("updated_at")
