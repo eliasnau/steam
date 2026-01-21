@@ -1,22 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
-	Blocks,
 	Building2,
-	Calendar,
-	DollarSign,
-	Home,
-	Infinity as InfinityIcon,
-	Layers,
-	LayoutDashboard,
-	PieChart,
-	Settings,
-	ShoppingBag,
-	Store,
-	Users,
+	Gamepad2Icon,
+	ShapesIcon,
+	TagIcon,
 } from "lucide-react";
-import { CommandSearch } from "./command-search";
 import DashboardNavigation from "./nav-main";
 import { UserButton } from "./user-button";
 import {
@@ -36,8 +25,20 @@ const dashboardRoutes: NavRoute[] = [
 	{
 		id: "games",
 		title: "Spiele",
-		icon: <LayoutDashboard className="size-4" />,
+		icon: <Gamepad2Icon className="size-4" />,
 		link: "/admin/games",
+	},
+	{
+		id: "tags",
+		title: "Tags",
+		icon: <TagIcon className="size-4" />,
+		link: "/admin/tags",
+	},
+	{
+		id: "genre",
+		title: "Genre",
+		icon: <ShapesIcon className="size-4" />,
+		link: "/admin/genres",
 	},
 	{
 		id: "developers",
@@ -48,14 +49,8 @@ const dashboardRoutes: NavRoute[] = [
 	{
 		id: "publishers",
 		title: "Publishers",
-		icon: <Blocks className="size-4" />,
+		icon: <Building2 className="size-4" />,
 		link: "/admin/publishers",
-	},
-	{
-		id: "genre",
-		title: "Genre",
-		icon: <Blocks className="size-4" />,
-		link: "/admin/genres",
 	},
 ];
 

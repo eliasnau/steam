@@ -88,31 +88,32 @@ interface GamesTableProps {
 }
 
 const createColumns = (): ColumnDef<GameRow>[] => [
-	// {
-	// 	accessorKey: "image",
-	// 	header: "",
-	// 	enableSorting: false,
-	// 	cell: ({ row }) => {
-	// 		const game = row.original;
-	// 		if (!game.image) {
-	// 			return (
-	// 				<div className="flex h-12 w-20 items-center justify-center rounded bg-muted">
-	// 					<GamepadIcon className="h-6 w-6 text-muted-foreground" />
-	// 				</div>
-	// 			);
-	// 		}
-	// 		return (
-	// 			<div className="relative h-12 w-20 overflow-hidden rounded">
-	// 				<Image
-	// 					src={game.image}
-	// 					alt={game.name}
-	// 					fill
-	// 					className="object-cover"
-	// 				/>
-	// 			</div>
-	// 		);
-	// 	},
-	// },
+	{
+		accessorKey: "image",
+		header: "",
+		enableSorting: false,
+		size: 90,
+		maxSize: 90,
+		cell: ({ row }) => {
+			const game = row.original;
+			if (!game.image) {
+				return (
+					<div className="flex h-10 w-20 items-center justify-center rounded bg-muted">
+						<GamepadIcon className="h-6 w-6 text-muted-foreground" />
+					</div>
+				);
+			}
+			return (
+				<div className="h-10 w-20 overflow-hidden rounded">
+					<img
+						src={game.image}
+						alt={game.name}
+						className="h-full w-full object-cover"
+					/>
+				</div>
+			);
+		},
+	},
 	{
 		accessorKey: "name",
 		header: "Name",
@@ -125,7 +126,9 @@ const createColumns = (): ColumnDef<GameRow>[] => [
 		accessorKey: "price",
 		header: "Price",
 		cell: ({ row }) => {
-			const price = row.original.price ? Number.parseFloat(row.original.price).toFixed(2) : "Kostenlos";
+			const price = row.original.price
+				? Number.parseFloat(row.original.price).toFixed(2)
+				: "Kostenlos";
 			return price;
 		},
 	},
@@ -368,7 +371,9 @@ export default function GamesTable({
 							<TableRow key={`skeleton-${idx}`}>
 								{columns.map((_column, colIdx) => (
 									<TableCell key={`skeleton-${idx}-${colIdx}`} className="py-3">
-										<Skeleton className="h-5 w-full" />
+										<Skeleton
+											className={colIdx === 0 ? "h-10 w-20" : "h-5 w-full"}
+										/>
 									</TableCell>
 								))}
 							</TableRow>
