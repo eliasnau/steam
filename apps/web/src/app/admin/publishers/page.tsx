@@ -15,9 +15,15 @@ import {
 } from "@/components/ui/empty";
 import { Frame, FramePanel } from "@/components/ui/frame";
 import { orpc } from "@/utils/orpc";
-import PublishersTable from "./_components/publishers-table";
-import { Header, HeaderActions, HeaderContent, HeaderDescription, HeaderTitle } from "../_components/page-header";
 import AddPublisherSheet from "../_components/add-publisher-sheet";
+import {
+	Header,
+	HeaderActions,
+	HeaderContent,
+	HeaderDescription,
+	HeaderTitle,
+} from "../_components/page-header";
+import PublishersTable from "./_components/publishers-table";
 
 export default function PublishersPage() {
 	return (
@@ -62,10 +68,14 @@ function PublishersPageContent() {
 				<HeaderContent>
 					<HeaderTitle>Publisher</HeaderTitle>
 					<HeaderDescription>
+						Verwalten Sie alle Publisher in der Datenbank
 					</HeaderDescription>
 				</HeaderContent>
 				<HeaderActions>
-					<AddPublisherSheet renderTrigger={<Button />} trigger={"Neuen Publisher erstellen"}/>
+					<AddPublisherSheet
+						renderTrigger={<Button />}
+						trigger={"Neuen Publisher erstellen"}
+					/>
 				</HeaderActions>
 			</Header>
 
@@ -77,15 +87,15 @@ function PublishersPageContent() {
 								<EmptyMedia variant="icon">
 									<AlertCircle />
 								</EmptyMedia>
-								<EmptyTitle>Failed to load Publishers</EmptyTitle>
+								<EmptyTitle>Fehler beim Laden der Publisher</EmptyTitle>
 								<EmptyDescription>
 									{error instanceof Error
 										? error.message
-										: "Something went wrong. Please try again."}
+										: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."}
 								</EmptyDescription>
 							</EmptyHeader>
 							<EmptyContent>
-								<Button onClick={() => refetch()}>Try Again</Button>
+								<Button onClick={() => refetch()}>Erneut versuchen</Button>
 							</EmptyContent>
 						</Empty>
 					</FramePanel>
