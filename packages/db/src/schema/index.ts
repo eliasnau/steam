@@ -20,13 +20,14 @@ export const game = pgTable(
 
 		steamId: integer("steam_id").unique().notNull(),
 		name: text("name").notNull(),
-		price: decimal("price").notNull(),
+		price: decimal("price"),
 		releasedAt: date("released_at").notNull(),
 		playerCountAllTime: integer("player_count_all_time").notNull(),
 		rating: integer("rating").notNull(),
 		image: text("image"),
-
-		franchiseId: uuid("franchise_id").references(() => franchises.id),
+    createdBy: text("created_by"),
+		
+    franchiseId: uuid("franchise_id").references(() => franchises.id),
 
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 		updatedAt: timestamp("updated_at")
@@ -45,19 +46,6 @@ export const game = pgTable(
 export const franchises = pgTable("franchises", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: text("name").notNull(),
-
-	createdAt: timestamp("created_at").defaultNow().notNull(),
-	updatedAt: timestamp("updated_at")
-		.defaultNow()
-		.$onUpdate(() => new Date())
-		.notNull(),
-});
-
-export const achievements = pgTable("achievements", {
-	id: uuid("id").defaultRandom().primaryKey(),
-
-	name: text("name").notNull(),
-	description: text("description"),
 
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at")
@@ -166,19 +154,6 @@ export const gameToCategories = pgTable(
 			.references(() => categories.id),
 	},
 	(table) => [primaryKey({ columns: [table.gameId, table.categoryId] })],
-);
-
-export const gameToAchievements = pgTable(
-	"game_to_achievements",
-	{
-		gameId: uuid("game_id")
-			.notNull()
-			.references(() => game.id),
-		achievementId: uuid("achievement_id")
-			.notNull()
-			.references(() => achievements.id),
-	},
-	(table) => [primaryKey({ columns: [table.gameId, table.achievementId] })],
 );
 
 export const gameToOperatingSystems = pgTable(
