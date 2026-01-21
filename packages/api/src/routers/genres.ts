@@ -45,7 +45,6 @@ export const genresRouter = {
 
 			const totalPages = Math.ceil(totalCount / limit);
 
-			// Count games for each genre
 			const genreIds = genreList.map((g) => g.id);
 			const gameCounts = new Map<string, number>();
 
@@ -107,12 +106,13 @@ export const genresRouter = {
 					});
 				}
 
-				const [newGenre] = await db
-					.insert(genres)
-					.values({
-						name: input.name,
-					})
-					.returning();
+				const [newGenre] = [null]// await db
+				// 	.insert(genres)
+				// 	.values({
+				// 		name: input.name,
+				// 		steamId: input.steamId
+				// 	})
+				// 	.returning();
 
 				if (!newGenre) {
 					throw new Error("Fehler beim Erstellen des Genre");
