@@ -1,5 +1,5 @@
 import { ORPCError } from "@orpc/server";
-import { db, eq, inArray } from "@repo/db";
+import { and, count, db, eq, ilike, inArray, or, sql } from "@repo/db";
 import {
 	categories,
 	developers,
@@ -19,6 +19,143 @@ import { z } from "zod";
 import { protectedProcedure, publicProcedure } from "../index";
 
 export const gamesRouter = {
+	list: publicProcedure
+		.input(
+			z.object({
+				page: z.number().min(1).default(1),
+				limit: z.number().min(1).max(100).default(20),
+				search: z.string().optional(),
+				genreIds: z.array(z.string().uuid()).optional(),
+			}),
+		)
+		.handler(async ({ input }) => {
+			const { page, limit } = input;
+
+			const rawSearch = input.search?.trim();
+			const search = rawSearch && rawSearch.length > 0 ? rawSearch : undefined;
+
+			const genreIds =
+				input.genreIds
+					?.map((g) => g.trim())
+					.filter(Boolean)
+					.filter((v, i, a) => a.indexOf(v) === i) ?? undefined;
+
+			if (input.genreIds && (!genreIds || genreIds.length === 0)) {
+				return {
+					data: [],
+					pagination: {
+						page,
+						limit,
+						totalCount: 0,
+						totalPages: 0,
+						hasNextPage: false,
+						hasPreviousPage: page > 1,
+					},
+				};
+			}
+
+			const offset = (page - 1) * limit;
+
+			const gameWhere = and(
+				search
+					? or(
+							ilike(game.name, `%${search}%`),
+							sql`CAST(${game.steamId} AS TEXT) LIKE ${`%${search}%`}`,
+						)
+					: undefined,
+				genreIds?.length
+					? sql`${game.id} in (
+              select ${gameToGenres.gameId}
+              from ${gameToGenres}
+              where ${inArray(gameToGenres.genreId, genreIds)}
+            )`
+					: undefined,
+			);
+
+			const games = await db
+				.select({
+					id: game.id,
+					steamId: game.steamId,
+					name: game.name,
+					price: game.price,
+					releasedAt: game.releasedAt,
+					playerCountAllTime: game.playerCountAllTime,
+					rating: game.rating,
+					image: game.image,
+					franchiseId: game.franchiseId,
+					createdAt: game.createdAt,
+					updatedAt: game.updatedAt,
+				})
+				.from(game)
+				.where(gameWhere)
+				.limit(limit)
+				.offset(offset)
+				.orderBy(game.createdAt);
+
+			const [{ count: totalCount = 0 } = { count: 0 }] = await db
+				.select({ count: count() })
+				.from(game)
+				.where(gameWhere);
+
+			const totalPages = Math.ceil(totalCount / limit);
+
+			// Fetch genre info for the listed games in one shot
+			const gameIds = games.map((g) => g.id);
+			let genreMap = new Map<
+				string,
+				{ genreId: string; genre: { id: string; name: string } }[]
+			>();
+
+			if (gameIds.length > 0) {
+				const genreRows = await db
+					.select({
+						gameId: gameToGenres.gameId,
+						genreId: gameToGenres.genreId,
+						gId: genres.id,
+						gName: genres.name,
+					})
+					.from(gameToGenres)
+					.innerJoin(genres, eq(genres.id, gameToGenres.genreId))
+					.where(inArray(gameToGenres.gameId, gameIds));
+
+				genreMap = genreRows.reduce(
+					(acc, r) => {
+						const list = acc.get(r.gameId) ?? [];
+						list.push({
+							genreId: r.genreId,
+							genre: { id: r.gId, name: r.gName },
+						});
+						acc.set(r.gameId, list);
+						return acc;
+					},
+					new Map<
+						string,
+						{
+							genreId: string;
+							genre: { id: string; name: string };
+						}[]
+					>(),
+				);
+			}
+
+			const data = games.map((g) => ({
+				...g,
+				genres: genreMap.get(g.id) ?? [],
+			}));
+
+			return {
+				data,
+				pagination: {
+					page,
+					limit,
+					totalCount,
+					totalPages,
+					hasNextPage: page < totalPages,
+					hasPreviousPage: page > 1,
+				},
+			};
+		}),
+
 	getAll: publicProcedure.handler(async () => {
 		return [];
 	}),
@@ -51,8 +188,12 @@ export const gamesRouter = {
 					.array(z.string().uuid("Ungültige Betriebssystem-ID"))
 					.optional(),
 				tags: z.array(z.string().uuid("Ungültige Tag-ID")).optional(),
-				developers: z.array(z.string().uuid("Ungültige Entwickler-ID")).optional(),
-				publishers: z.array(z.string().uuid("Ungültige Publisher-ID")).optional(),
+				developers: z
+					.array(z.string().uuid("Ungültige Entwickler-ID"))
+					.optional(),
+				publishers: z
+					.array(z.string().uuid("Ungültige Publisher-ID"))
+					.optional(),
 
 				franchiseId: z.string().uuid("Ungültige Franchise-ID").optional(),
 			}),
