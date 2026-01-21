@@ -29,12 +29,12 @@ export const categoriesRouter = {
 						message: "Diese Kategorie existiert bereits.",
 					});
 				}
-				const [newCategory] = await db
-					.insert(categories)
-					.values({
-						name: input.name.trim(),
-					})
-					.returning();
+			 const [newCategory] = [null] // await db
+				// 	.insert(categories)
+				// 	.values({
+				// 		name: input.name.trim(),
+				// 	})
+				// 	.returning();
 
 				if (!newCategory) {
 					throw new Error("Fehler beim Erstellen des Features");
