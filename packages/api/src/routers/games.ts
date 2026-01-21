@@ -659,14 +659,19 @@ export const gamesRouter = {
 					});
 				}
 
-				const [detailsResponse, reviewsResponse] = await Promise.all([
-					fetch(
-						`https://store.steampowered.com/api/appdetails?appids=${input.steamId}`,
-					),
-					fetch(
-						`https://store.steampowered.com/appreviews/${input.steamId}?json=1`,
-					),
-				]);
+				const [detailsResponse, reviewsResponse, steamspyResponse] =
+					await Promise.all([
+						fetch(
+							`https://store.steampowered.com/api/appdetails?appids=${input.steamId}`,
+						),
+						fetch(
+							`https://store.steampowered.com/appreviews/${input.steamId}?json=1`,
+						),
+						fetch(
+							`http://steamspy.com/api.php?request=appdetails&appid=${input.steamId}`,
+							{ signal: AbortSignal.timeout(5000) },
+						).catch(() => null),
+					]);
 
 				if (!detailsResponse.ok) {
 					throw new ORPCError("BAD_REQUEST", {
@@ -879,6 +884,29 @@ export const gamesRouter = {
 					}
 				}
 
+				let tagNames: string[] = [];
+				if (steamspyResponse) {
+					try {
+						const steamspyData = (await steamspyResponse.json()) as {
+							appid: number;
+							name: string;
+							tags?: Record<string, number>;
+							[key: string]: unknown;
+						};
+
+						if (steamspyData.tags && typeof steamspyData.tags === "object") {
+							tagNames = Object.keys(steamspyData.tags);
+						}
+					} catch (error) {
+						console.warn(
+							`SteamSpy API error for appid ${input.steamId}:`,
+							error,
+						);
+					}
+				}
+
+				const tagRecords = await DB.query.tags.getOrCreateTags(tagNames);
+
 				let price: string | null = null;
 				if (!gameData.is_free && gameData.package_groups?.[0]?.subs?.[0]) {
 					const priceInCents =
@@ -914,7 +942,7 @@ export const gamesRouter = {
 						if (positivePercentage < 95) return 5;
 						return 6;
 					}
-					return 3; // Default middle rating
+					return 3;
 				})();
 
 				const missingOSNames = osNames.filter(
@@ -989,6 +1017,15 @@ export const gamesRouter = {
 							publisherRecords.map((publisher) => ({
 								gameId: insertedGame.id,
 								publisherId: publisher.id,
+							})),
+						);
+					}
+
+					if (tagRecords.length > 0) {
+						await tx.insert(gameToTags).values(
+							tagRecords.map((tag: { id: string; name: string }) => ({
+								gameId: insertedGame.id,
+								tagId: tag.id,
 							})),
 						);
 					}
