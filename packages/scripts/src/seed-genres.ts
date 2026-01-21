@@ -253,13 +253,18 @@ async function main() {
   let inserted = 0;
   let skipped = 0;
 
-  for (const genre of genresToInsert) {
-    try {
-      await db.insert(genres).values(genre);
-      inserted++;
-    } catch (error) {
-      skipped++;
-    }
+  try {
+    const result = await db
+      .insert(genres)
+      .values(genresToInsert)
+      .onConflictDoNothing()
+      .returning({ steamId: genres.steamId });
+    
+    inserted = result.length;
+    skipped = genresToInsert.length - inserted;
+  } catch (error) {
+    console.error("Error inserting genres:", error);
+    process.exit(1);
   }
 
   console.log("\nCompleted!");
