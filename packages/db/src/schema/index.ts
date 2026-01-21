@@ -53,19 +53,6 @@ export const franchises = pgTable("franchises", {
 		.notNull(),
 });
 
-export const achievements = pgTable("achievements", {
-	id: uuid("id").defaultRandom().primaryKey(),
-
-	name: text("name").notNull(),
-	description: text("description"),
-
-	createdAt: timestamp("created_at").defaultNow().notNull(),
-	updatedAt: timestamp("updated_at")
-		.defaultNow()
-		.$onUpdate(() => new Date())
-		.notNull(),
-});
-
 export const categories = pgTable("categories", {
 	id: uuid("id").defaultRandom().primaryKey(),
 
@@ -166,19 +153,6 @@ export const gameToCategories = pgTable(
 			.references(() => categories.id),
 	},
 	(table) => [primaryKey({ columns: [table.gameId, table.categoryId] })],
-);
-
-export const gameToAchievements = pgTable(
-	"game_to_achievements",
-	{
-		gameId: uuid("game_id")
-			.notNull()
-			.references(() => game.id),
-		achievementId: uuid("achievement_id")
-			.notNull()
-			.references(() => achievements.id),
-	},
-	(table) => [primaryKey({ columns: [table.gameId, table.achievementId] })],
 );
 
 export const gameToOperatingSystems = pgTable(
