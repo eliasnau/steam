@@ -20,7 +20,7 @@ export const game = pgTable(
 
 		steamId: integer("steam_id").unique().notNull(),
 		name: text("name").notNull(),
-		price: decimal("price").notNull(),
+		price: decimal("price"),
 		releasedAt: date("released_at").notNull(),
 		playerCountAllTime: integer("player_count_all_time").notNull(),
 		rating: integer("rating").notNull(),
