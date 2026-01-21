@@ -2,13 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle } from "lucide-react";
-import Link from "next/link";
-import {
-	parseAsArrayOf,
-	parseAsInteger,
-	parseAsString,
-	useQueryStates,
-} from "nuqs";
+import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +15,7 @@ import {
 } from "@/components/ui/empty";
 import { Frame, FramePanel } from "@/components/ui/frame";
 import { orpc } from "@/utils/orpc";
+import AddGenreSheet from "../_components/add-genre-sheet";
 import {
 	Header,
 	HeaderActions,
@@ -28,48 +23,30 @@ import {
 	HeaderDescription,
 	HeaderTitle,
 } from "../_components/page-header";
-import GamesTable from "./_components/games-table";
+import GenresTable from "./_components/genres-table";
 
-export default function GamesPage() {
+export default function GenresPage() {
 	return (
 		<Suspense>
-			<GamesPageContent />
+			<GenresPageContent />
 		</Suspense>
 	);
 }
 
-function GamesPageContent() {
-	const [{ page, limit, search, genreIds }, setPagination] = useQueryStates({
+function GenresPageContent() {
+	const [{ page, limit, search }, setPagination] = useQueryStates({
 		page: parseAsInteger.withDefault(1),
 		limit: parseAsInteger.withDefault(20),
 		search: parseAsString.withDefault(""),
-		genreIds: parseAsArrayOf(parseAsString).withDefault([]),
 	});
 
-	const UUID_REGEX =
-		/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-	const validGenreIds =
-		genreIds.length > 0
-			? genreIds.filter(
-					(id) => id && id.trim().length > 0 && UUID_REGEX.test(id),
-				)
-			: [];
-
 	const { data, isPending, error, refetch } = useQuery(
-		orpc.games.list.queryOptions({
+		orpc.genres.list.queryOptions({
 			input: {
 				page,
 				limit,
 				search: search || undefined,
-				genreIds: validGenreIds.length > 0 ? validGenreIds : undefined,
 			},
-		}),
-	);
-
-	const { data: genresData } = useQuery(
-		orpc.genres.getAll.queryOptions({
-			input: undefined,
 		}),
 	);
 
@@ -85,26 +62,20 @@ function GamesPageContent() {
 		setPagination({ page: 1, search: newSearch });
 	};
 
-	const handleGenreFilterChange = (newGenreIds: string[]) => {
-		const validGenreIds = newGenreIds.filter(
-			(id) => id && id.trim().length > 0 && UUID_REGEX.test(id),
-		);
-		setPagination({ page: 1, genreIds: validGenreIds });
-	};
-
 	return (
 		<div className="container mx-auto py-8">
 			<Header>
 				<HeaderContent>
-					<HeaderTitle>Spiele</HeaderTitle>
+					<HeaderTitle>Genres</HeaderTitle>
 					<HeaderDescription>
-						Verwalten Sie alle Spiele in der Datenbank
+						Verwalten Sie alle Genres in der Datenbank
 					</HeaderDescription>
 				</HeaderContent>
 				<HeaderActions>
-					<Link href="/admin/games/add">
-						<Button>Neues Spiel hinzufügen</Button>
-					</Link>
+					<AddGenreSheet
+						renderTrigger={<Button />}
+						trigger={"Neues Genre erstellen"}
+					/>
 				</HeaderActions>
 			</Header>
 
@@ -116,7 +87,7 @@ function GamesPageContent() {
 								<EmptyMedia variant="icon">
 									<AlertCircle />
 								</EmptyMedia>
-								<EmptyTitle>Fehler beim Laden der Spiele</EmptyTitle>
+								<EmptyTitle>Fehler beim Laden der Genres</EmptyTitle>
 								<EmptyDescription>
 									{error instanceof Error
 										? error.message
@@ -130,7 +101,7 @@ function GamesPageContent() {
 					</FramePanel>
 				</Frame>
 			) : (
-				<GamesTable
+				<GenresTable
 					data={data?.data ?? []}
 					pagination={
 						data?.pagination ?? {
@@ -143,12 +114,9 @@ function GamesPageContent() {
 						}
 					}
 					search={search}
-					genreIds={genreIds}
-					genres={genresData ?? []}
 					onSearchChange={handleSearchChange}
 					onPageChange={handlePageChange}
 					onLimitChange={handleLimitChange}
-					onGenreFilterChange={handleGenreFilterChange}
 					loading={isPending}
 				/>
 			)}

@@ -35,6 +35,28 @@ export default async function AdminDashboardPage() {
 					</Button>
 				</Link>
 
+				<Link href="/admin/developers">
+					<Button variant="outline" className="w-full justify-start" size="lg">
+						Developers
+					</Button>
+				</Link>
+
+				<Link href="/admin/publishers">
+					<Button variant="outline" className="w-full justify-start" size="lg">
+						Publishers
+					</Button>
+				</Link>
+				<Link href="/admin/genres">
+					<Button variant="outline" className="w-full justify-start" size="lg">
+						Genres
+					</Button>
+				</Link>
+				<Link href="/admin/tags">
+					<Button variant="outline" className="w-full justify-start" size="lg">
+						Tags
+					</Button>
+				</Link>
+
 				<AddFranchiseSheet
 					renderTrigger={
 						<Button
@@ -47,18 +69,6 @@ export default async function AdminDashboardPage() {
 					}
 				/>
 
-				<AddGenreSheet
-					renderTrigger={
-						<Button
-							variant="outline"
-							className="w-full justify-start"
-							size="lg"
-						>
-							Genre hinzufügen
-						</Button>
-					}
-				/>
-
 				<AddCategorySheet
 					renderTrigger={
 						<Button
@@ -67,54 +77,6 @@ export default async function AdminDashboardPage() {
 							size="lg"
 						>
 							Feature hinzufügen
-						</Button>
-					}
-				/>
-
-				<AddTagSheet
-					renderTrigger={
-						<Button
-							variant="outline"
-							className="w-full justify-start"
-							size="lg"
-						>
-							Tag hinzufügen
-						</Button>
-					}
-				/>
-
-				<AddDeveloperSheet
-					renderTrigger={
-						<Button
-							variant="outline"
-							className="w-full justify-start"
-							size="lg"
-						>
-							Entwickler hinzufügen
-						</Button>
-					}
-				/>
-
-				<AddPublisherSheet
-					renderTrigger={
-						<Button
-							variant="outline"
-							className="w-full justify-start"
-							size="lg"
-						>
-							Publisher hinzufügen
-						</Button>
-					}
-				/>
-
-				<AddOperatingSystemSheet
-					renderTrigger={
-						<Button
-							variant="outline"
-							className="w-full justify-start"
-							size="lg"
-						>
-							Betriebssystem hinzufügen
 						</Button>
 					}
 				/>

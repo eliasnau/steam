@@ -15,9 +15,15 @@ import {
 } from "@/components/ui/empty";
 import { Frame, FramePanel } from "@/components/ui/frame";
 import { orpc } from "@/utils/orpc";
-import DevelopersTable from "./_components/developers-table";
-import { Header, HeaderActions, HeaderContent, HeaderDescription, HeaderTitle } from "../_components/page-header";
 import AddDeveloperSheet from "../_components/add-developer-sheet";
+import {
+	Header,
+	HeaderActions,
+	HeaderContent,
+	HeaderDescription,
+	HeaderTitle,
+} from "../_components/page-header";
+import DevelopersTable from "./_components/developers-table";
 
 export default function DevelopersPage() {
 	return (
@@ -62,10 +68,14 @@ function DevelopersPageContent() {
 				<HeaderContent>
 					<HeaderTitle>Entwickler</HeaderTitle>
 					<HeaderDescription>
+						Verwalten Sie alle Entwickler in der Datenbank
 					</HeaderDescription>
 				</HeaderContent>
 				<HeaderActions>
-					<AddDeveloperSheet renderTrigger={<Button />} trigger={"Neuen entwickler erstellen"}/>
+					<AddDeveloperSheet
+						renderTrigger={<Button />}
+						trigger={"Neuen Entwickler erstellen"}
+					/>
 				</HeaderActions>
 			</Header>
 
@@ -77,15 +87,15 @@ function DevelopersPageContent() {
 								<EmptyMedia variant="icon">
 									<AlertCircle />
 								</EmptyMedia>
-								<EmptyTitle>Failed to load Developers</EmptyTitle>
+								<EmptyTitle>Fehler beim Laden der Entwickler</EmptyTitle>
 								<EmptyDescription>
 									{error instanceof Error
 										? error.message
-										: "Something went wrong. Please try again."}
+										: "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."}
 								</EmptyDescription>
 							</EmptyHeader>
 							<EmptyContent>
-								<Button onClick={() => refetch()}>Try Again</Button>
+								<Button onClick={() => refetch()}>Erneut versuchen</Button>
 							</EmptyContent>
 						</Empty>
 					</FramePanel>
