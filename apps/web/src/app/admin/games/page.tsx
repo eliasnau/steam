@@ -93,8 +93,8 @@ function GamesPageContent() {
 	};
 
 	return (
-		<div className="container mx-auto py-8">
-			<Header>
+		<div className="container mx-auto">
+			<Header className="mb-4">
 				<HeaderContent>
 					<HeaderTitle>Spiele</HeaderTitle>
 					<HeaderDescription>
