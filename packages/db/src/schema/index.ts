@@ -25,8 +25,9 @@ export const game = pgTable(
 		playerCountAllTime: integer("player_count_all_time").notNull(),
 		rating: integer("rating").notNull(),
 		image: text("image"),
-
-		franchiseId: uuid("franchise_id").references(() => franchises.id),
+    createdBy: text("created_by"),
+		
+    franchiseId: uuid("franchise_id").references(() => franchises.id),
 
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 		updatedAt: timestamp("updated_at")
