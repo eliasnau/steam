@@ -69,6 +69,7 @@ export const achievements = pgTable("achievements", {
 export const categories = pgTable("categories", {
 	id: uuid("id").defaultRandom().primaryKey(),
 
+	steamId: integer("steam_id").unique().notNull(),
 	name: text("name").notNull(),
 
 	createdAt: timestamp("created_at").defaultNow().notNull(),
