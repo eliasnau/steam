@@ -6,7 +6,7 @@ import { protectedProcedure, publicProcedure } from "../index";
 
 export const categoriesRouter = {
 	getAll: publicProcedure.handler(async () => {
-		const allCategories = await db.select().from(categories);
+		const allCategories = await db.select().from(categories).orderBy(categories.steamId);
 		return allCategories;
 	}),
 
