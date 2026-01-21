@@ -245,7 +245,10 @@ async function main() {
 
   const genresToInsert = Array.from(genresById.entries()).map(
     ([steamId, name]) => ({
-      steamId,
+      steamId: Number.parseInt(steamId),
+      name,
+    }),
+  );
       name,
     }),
   );
