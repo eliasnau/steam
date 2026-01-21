@@ -1,5 +1,6 @@
 import * as gameMutations from "./mutations/game";
 import * as gameQueries from "./queries/game";
+import * as tagQueries from "./queries/tags";
 import * as validationQueries from "./queries/validation";
 
 export const DB = {
@@ -9,6 +10,9 @@ export const DB = {
 			getBySteamId: gameQueries.getGameBySteamId,
 			list: gameQueries.listGames,
 			getGenresForGames: gameQueries.getGenresForGames,
+		},
+		tags: {
+			getOrCreateTags: tagQueries.getOrCreateTags,
 		},
 		validation: {
 			validateGenres: validationQueries.validateGenres,
