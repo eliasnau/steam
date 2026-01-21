@@ -1,6 +1,6 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "base-vega",
+  "style": "radix-vega",
   "rsc": false,
   "tsx": true,
   "tailwind": {
@@ -22,6 +22,7 @@
   },
   "registries": {
     "@coss": "https://coss.com/ui/r/{name}.json",
-    "@formcn": "https://formcn.dev/r/{name}.json"
+    "@formcn": "https://formcn.dev/r/{name}.json",
+    "@animate-ui": "https://animate-ui.com/r/{name}.json"
   }
 }
