@@ -668,7 +668,7 @@ export const gamesRouter = {
 							`https://store.steampowered.com/appreviews/${input.steamId}?json=1`,
 						),
 						fetch(
-							`http://steamspy.com/api.php?request=appdetails&appid=${input.steamId}`,
+							`https://steamspy.com/api.php?request=appdetails&appid=${input.steamId}`,
 							{ signal: AbortSignal.timeout(5000) },
 						).catch(() => null),
 					]);
