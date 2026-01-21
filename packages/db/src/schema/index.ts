@@ -84,6 +84,7 @@ export const genres = pgTable("genres", {
 	id: uuid("id").defaultRandom().primaryKey(),
 
 	name: text("name").notNull(),
+	steamId: integer("steam_id").unique().notNull(),
 
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at")
