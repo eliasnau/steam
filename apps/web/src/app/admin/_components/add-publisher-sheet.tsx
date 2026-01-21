@@ -87,8 +87,8 @@ export default function AddPublisherSheet({
 
 	return (
 		<Sheet open={open} onOpenChange={onOpenChange}>
-			{trigger && <SheetTrigger>{trigger}</SheetTrigger>}
-			{renderTrigger && <SheetTrigger render={renderTrigger} />}
+			{!renderTrigger && !trigger && <SheetTrigger />}
+			{renderTrigger && trigger && <SheetTrigger render={renderTrigger}>{trigger}</SheetTrigger>}
 			<SheetPopup side="right" inset>
 				<form
 					onSubmit={(e) => {
