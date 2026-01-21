@@ -157,13 +157,6 @@ const createColumns = (): ColumnDef<GameRow>[] => [
 		},
 	},
 	{
-		accessorKey: "playerCountAllTime",
-		header: "Players",
-		cell: ({ row }) => {
-			return row.original.playerCountAllTime.toLocaleString();
-		},
-	},
-	{
 		id: "actions",
 		header: "Actions",
 		enableSorting: false,

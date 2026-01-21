@@ -46,7 +46,6 @@ export const publishersRouter = {
 
 			const totalPages = Math.ceil(totalCount / limit);
 
-			// Count games for each publisher
 			const publisherIds = pubs.map((p) => p.id);
 			const gameCounts = new Map<string, number>();
 
