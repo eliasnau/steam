@@ -894,10 +894,23 @@ export const gamesRouter = {
 							[key: string]: unknown;
 						};
 
-						if (steamspyData.tags && typeof steamspyData.tags === "object") {
+						if (steamspyData.appid !== input.steamId) {
+							throw new ORPCError("BAD_REQUEST", {
+								message: `SteamSpy API returned data for wrong app. Expected ${input.steamId}, got ${steamspyData.appid}`,
+							});
+						}
+
+						if (!steamspyData.tags || typeof steamspyData.tags !== "object") {
+							console.warn(
+								`SteamSpy API did not return tags for appid ${input.steamId}`,
+							);
+						} else {
 							tagNames = Object.keys(steamspyData.tags);
 						}
 					} catch (error) {
+						if (error instanceof ORPCError) {
+							throw error;
+						}
 						console.warn(
 							`SteamSpy API error for appid ${input.steamId}:`,
 							error,
