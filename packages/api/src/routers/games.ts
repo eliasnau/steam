@@ -410,7 +410,7 @@ export const gamesRouter = {
 			try {
 				const [detailsResponse, reviewsResponse] = await Promise.all([
 					fetch(
-						`https://store.steampowered.com/api/appdetails?appids=${input.steamId}`,
+						`https://store.steampowered.com/api/appdetails?appids=${input.steamId}&cc=de&l=english`,
 					),
 					fetch(
 						`https://store.steampowered.com/appreviews/${input.steamId}?json=1`,
@@ -662,7 +662,7 @@ export const gamesRouter = {
 				const [detailsResponse, reviewsResponse, steamspyResponse] =
 					await Promise.all([
 						fetch(
-							`https://store.steampowered.com/api/appdetails?appids=${input.steamId}`,
+							`https://store.steampowered.com/api/appdetails?appids=${input.steamId}&cc=de&l=english`,
 						),
 						fetch(
 							`https://store.steampowered.com/appreviews/${input.steamId}?json=1`,
@@ -894,10 +894,23 @@ export const gamesRouter = {
 							[key: string]: unknown;
 						};
 
-						if (steamspyData.tags && typeof steamspyData.tags === "object") {
+						if (steamspyData.appid !== input.steamId) {
+							throw new ORPCError("BAD_REQUEST", {
+								message: `SteamSpy API returned data for wrong app. Expected ${input.steamId}, got ${steamspyData.appid}`,
+							});
+						}
+
+						if (!steamspyData.tags || typeof steamspyData.tags !== "object") {
+							console.warn(
+								`SteamSpy API did not return tags for appid ${input.steamId}`,
+							);
+						} else {
 							tagNames = Object.keys(steamspyData.tags);
 						}
 					} catch (error) {
+						if (error instanceof ORPCError) {
+							throw error;
+						}
 						console.warn(
 							`SteamSpy API error for appid ${input.steamId}:`,
 							error,
