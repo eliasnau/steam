@@ -14,7 +14,8 @@ interface CreateGameData {
 	name: string;
 	price: string | null;
 	releasedAt: string;
-	rating: number;
+	positiveReviews: number;
+	negativeReviews: number;
 	image?: string | null;
 	shortDescription?: string | null;
 	website?: string | null;
@@ -43,7 +44,8 @@ export async function createGame(
 				name: gameData.name,
 				price: gameData.price,
 				releasedAt: gameData.releasedAt,
-				rating: gameData.rating,
+				positiveReviews: gameData.positiveReviews,
+				negativeReviews: gameData.negativeReviews,
 				image: gameData.image || null,
 				shortDescription: gameData.shortDescription || null,
 				website: gameData.website || null,
