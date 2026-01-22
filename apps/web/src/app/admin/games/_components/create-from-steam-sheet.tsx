@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AlertCircle, Check, ExternalLink, Loader2 } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -36,10 +36,44 @@ interface CreateFromSteamSheetProps {
 	onSuccess?: () => void;
 }
 
+function extractSteamAppId(input: string): number | null {
+	const trimmed = input.trim();
+
+	const direct = Number.parseInt(trimmed, 10);
+	if (!Number.isNaN(direct) && direct > 0) return direct;
+
+	const normalized = trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+
+	try {
+		const url = new URL(normalized);
+		const path = url.pathname;
+
+		const match =
+			path.match(/\/app\/(\d+)(?:\/|$)/i) ??
+			path.match(/\/apps?\/(\d+)(?:\/|$)/i);
+
+		if (!match) return null;
+
+		const id = Number.parseInt(match[1]!, 10);
+		return Number.isNaN(id) || id <= 0 ? null : id;
+	} catch {
+		const match =
+			trimmed.match(/\/app\/(\d+)(?:\/|$)/i) ??
+			trimmed.match(/\/apps?\/(\d+)(?:\/|$)/i);
+
+		if (!match) return null;
+
+		const id = Number.parseInt(match[1]!, 10);
+		return Number.isNaN(id) || id <= 0 ? null : id;
+	}
+}
+
 export function CreateFromSteamSheet({ onSuccess }: CreateFromSteamSheetProps) {
 	const [open, setOpen] = useState(false);
 	const [steamId, setSteamId] = useState("");
 	const [createdGame, setCreatedGame] = useState<CreatedGameData | null>(null);
+
+	const parsedSteamId = useMemo(() => extractSteamAppId(steamId), [steamId]);
 
 	const createMutation = useMutation({
 		mutationFn: async (steamId: number) => {
@@ -55,8 +89,7 @@ export function CreateFromSteamSheet({ onSuccess }: CreateFromSteamSheetProps) {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		const parsedSteamId = Number.parseInt(steamId);
-		if (!Number.isNaN(parsedSteamId) && parsedSteamId > 0) {
+		if (parsedSteamId) {
 			createMutation.mutate(parsedSteamId);
 		}
 	};
@@ -89,7 +122,7 @@ export function CreateFromSteamSheet({ onSuccess }: CreateFromSteamSheetProps) {
 					<SheetDescription>
 						{createdGame
 							? "Das Spiel wurde erfolgreich zur Datenbank hinzugefügt."
-							: "Geben Sie eine Steam App ID ein, um ein Spiel automatisch zu erstellen."}
+							: "Geben Sie eine Steam App ID oder eine SteamDB/Steam URL ein, um ein Spiel automatisch zu erstellen."}
 					</SheetDescription>
 				</SheetHeader>
 
@@ -193,21 +226,20 @@ export function CreateFromSteamSheet({ onSuccess }: CreateFromSteamSheetProps) {
 									htmlFor="steamId"
 									className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 								>
-									Steam App ID
+									Steam App ID oder URL
 								</label>
 								<Input
 									id="steamId"
-									type="number"
-									placeholder="z.B. 730 für Counter-Strike 2"
+									type="text"
+									placeholder="z.B. 730 oder https://steamdb.info/app/730/charts/"
 									value={steamId}
 									onChange={(e) => setSteamId(e.target.value)}
 									disabled={createMutation.isPending}
 									required
-									min="1"
 								/>
 								<p className="text-muted-foreground text-xs">
-									Die App ID finden Sie in der Steam Store URL:
-									store.steampowered.com/app/<strong>730</strong>/
+									Beispiele: steamdb.info/app/730/charts/ oder
+									store.steampowered.com/app/730/
 								</p>
 							</div>
 
@@ -254,7 +286,7 @@ export function CreateFromSteamSheet({ onSuccess }: CreateFromSteamSheetProps) {
 							</SheetClose>
 							<Button
 								onClick={handleSubmit}
-								disabled={createMutation.isPending || !steamId}
+								disabled={createMutation.isPending || !parsedSteamId}
 							>
 								{createMutation.isPending && (
 									<Loader2 className="mr-2 h-4 w-4 animate-spin" />
