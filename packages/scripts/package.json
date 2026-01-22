@@ -4,7 +4,11 @@
 	"private": true,
 	"scripts": {
 		"seed:categories": "dotenv -e ../../apps/web/.env -- tsx src/seed-categories.ts",
-		"seed:genres": "dotenv -e ../../apps/web/.env -- tsx src/seed-genres.ts"
+		"seed:genres": "dotenv -e ../../apps/web/.env -- tsx src/seed-genres.ts",
+		"seed:tags": "dotenv -e ../../apps/web/.env -- tsx src/fetch-missing-tags.ts",
+		"fetch:tags": "dotenv -e ../../apps/web/.env -- tsx src/fetch-missing-tags.ts",
+		"test:fetch-tags": "tsx src/test-fetch-tags.ts",
+		"verify:migration": "dotenv -e ../../apps/web/.env -- tsx src/verify-migration.ts"
 	},
 	"dependencies": {
 		"@repo/db": "workspace:*",
