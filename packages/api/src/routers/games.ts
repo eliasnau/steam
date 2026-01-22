@@ -410,7 +410,7 @@ export const gamesRouter = {
 			try {
 				const [detailsResponse, reviewsResponse] = await Promise.all([
 					fetch(
-						`https://store.steampowered.com/api/appdetails?appids=${input.steamId}`,
+						`https://store.steampowered.com/api/appdetails?appids=${input.steamId}&cc=de&l=english`,
 					),
 					fetch(
 						`https://store.steampowered.com/appreviews/${input.steamId}?json=1`,
@@ -662,7 +662,7 @@ export const gamesRouter = {
 				const [detailsResponse, reviewsResponse, steamspyResponse] =
 					await Promise.all([
 						fetch(
-							`https://store.steampowered.com/api/appdetails?appids=${input.steamId}`,
+							`https://store.steampowered.com/api/appdetails?appids=${input.steamId}&cc=de&l=english`,
 						),
 						fetch(
 							`https://store.steampowered.com/appreviews/${input.steamId}?json=1`,
