@@ -22,7 +22,7 @@ export const game = pgTable(
 		name: text("name").notNull(),
 		price: decimal("price"),
 		releasedAt: date("released_at").notNull(),
-		positiveReviews: integer("postitive_reviews").notNull(),
+		positiveReviews: integer("positive_reviews").notNull(),
         negativeReviews: integer("negative_reviews").notNull(),
 		image: text("image"),
 		shortDescription: text("short_description"),
