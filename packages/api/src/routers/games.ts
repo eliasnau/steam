@@ -108,10 +108,12 @@ export const gamesRouter = {
 				publishedAt: z
 					.string()
 					.min(1, "Veröffentlichungsdatum ist erforderlich"),
-				rating: z
+				positiveReviews: z
 					.number()
-					.min(1, "Bewertung muss mindestens 1 sein")
-					.max(6, "Bewertung darf nicht größer als 6 sein"),
+					.min(0, "Positive Bewertungen müssen mindestens 0 sein"),
+				negativeReviews: z
+					.number()
+					.min(0, "Negative Bewertungen müssen mindestens 0 sein"),
 				image: z.string().optional(),
 				shortDescription: z.string().optional(),
 				website: z.string().optional(),
@@ -300,7 +302,8 @@ export const gamesRouter = {
 							name: input.name,
 							price: input.price || null,
 							releasedAt: input.publishedAt,
-							rating: input.rating,
+							positiveReviews: input.positiveReviews,
+							negativeReviews: input.negativeReviews,
 							image: input.image || null,
 							shortDescription: input.shortDescription || null,
 							website: input.website || null,
@@ -579,23 +582,13 @@ export const gamesRouter = {
 					} catch {}
 				}
 
-				let rating: number | undefined;
-				if (totalReviews > 0) {
-					const positivePercentage = (totalPositive / totalReviews) * 100;
-					if (positivePercentage < 20) rating = 1;
-					else if (positivePercentage < 40) rating = 2;
-					else if (positivePercentage < 70) rating = 3;
-					else if (positivePercentage < 80) rating = 4;
-					else if (positivePercentage < 95) rating = 5;
-					else rating = 6;
-				}
-
 				return {
 					steamId: gameData.steam_appid,
 					name: gameData.name,
 					price: price,
 					publishedAt: releasedAt,
-					rating: rating,
+					positiveReviews: totalPositive,
+					negativeReviews: totalNegative,
 					image: gameData.header_image || undefined,
 					shortDescription: gameData.short_description || undefined,
 					website: gameData.website || undefined,
@@ -722,7 +715,7 @@ export const gamesRouter = {
 				const gameData = appData.data;
 
 				let totalPositive = 0;
-				let totalReviews = 0;
+				let totalNegative = 0;
 
 				if (reviewsResponse.ok) {
 					try {
@@ -738,7 +731,7 @@ export const gamesRouter = {
 
 						if (reviewsData.success === 1 && reviewsData.query_summary) {
 							totalPositive = reviewsData.query_summary.total_positive ?? 0;
-							totalReviews = reviewsData.query_summary.total_reviews ?? 0;
+							totalNegative = reviewsData.query_summary.total_negative ?? 0;
 						}
 					} catch (error) {
 						console.error("Error parsing review data:", error);
@@ -945,19 +938,6 @@ export const gamesRouter = {
 					return new Date().toISOString().split("T")[0]!;
 				})();
 
-				const rating: number = (() => {
-					if (totalReviews > 0) {
-						const positivePercentage = (totalPositive / totalReviews) * 100;
-						if (positivePercentage < 20) return 1;
-						if (positivePercentage < 40) return 2;
-						if (positivePercentage < 70) return 3;
-						if (positivePercentage < 80) return 4;
-						if (positivePercentage < 95) return 5;
-						return 6;
-					}
-					return 3;
-				})();
-
 				const missingOSNames = osNames.filter(
 					(name) => !osRecords.some((r) => r.name === name),
 				);
@@ -976,7 +956,8 @@ export const gamesRouter = {
 							name: gameData.name,
 							price: price,
 							releasedAt: releasedAt,
-							rating: rating,
+							positiveReviews: totalPositive,
+							negativeReviews: totalNegative,
 							image: gameData.header_image || null,
 							shortDescription: gameData.short_description || null,
 							website: gameData.website || null,

@@ -26,7 +26,8 @@ interface CreatedGameData {
 	name: string;
 	price: string | null;
 	releasedAt: string;
-	rating: number;
+	positiveReviews: number;
+	negativeReviews: number;
 	image: string | null;
 	shortDescription: string | null;
 	website: string | null;
@@ -42,7 +43,9 @@ function extractSteamAppId(input: string): number | null {
 	const direct = Number.parseInt(trimmed, 10);
 	if (!Number.isNaN(direct) && direct > 0) return direct;
 
-	const normalized = trimmed.startsWith("http") ? trimmed : `https://${trimmed}`;
+	const normalized = trimmed.startsWith("http")
+		? trimmed
+		: `https://${trimmed}`;
 
 	try {
 		const url = new URL(normalized);
@@ -184,9 +187,20 @@ export function CreateFromSteamSheet({ onSuccess }: CreateFromSteamSheetProps) {
 									</div>
 									<div>
 										<div className="font-medium text-muted-foreground text-sm">
-											Bewertung
+											Reviews
 										</div>
-										<p className="text-base">{createdGame.rating} / 6</p>
+										<p className="text-base">
+											{(() => {
+												const total =
+													createdGame.positiveReviews +
+													createdGame.negativeReviews;
+												if (total === 0) return "Keine";
+												const percentage = Math.round(
+													(createdGame.positiveReviews / total) * 100,
+												);
+												return `${percentage}% positiv (${total.toLocaleString()})`;
+											})()}
+										</p>
 									</div>
 								</div>
 

@@ -22,7 +22,8 @@ export const game = pgTable(
 		name: text("name").notNull(),
 		price: decimal("price"),
 		releasedAt: date("released_at").notNull(),
-		rating: integer("rating").notNull(),
+		positiveReviews: integer("positive_reviews").notNull(),
+        negativeReviews: integer("negative_reviews").notNull(),
 		image: text("image"),
 		shortDescription: text("short_description"),
 		website: text("website"),
@@ -35,14 +36,7 @@ export const game = pgTable(
 			.defaultNow()
 			.$onUpdate(() => new Date())
 			.notNull(),
-	},
-	(table) => [
-		check(
-			"rating_between_1_and_6",
-			sql`${table.rating} >= 1 AND ${table.rating} <= 6`,
-		),
-	],
-);
+    });
 
 export const franchises = pgTable("franchises", {
 	id: uuid("id").defaultRandom().primaryKey(),

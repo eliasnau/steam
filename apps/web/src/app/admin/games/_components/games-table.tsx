@@ -133,10 +133,15 @@ const createColumns = (): ColumnDef<GameRow>[] => [
 		},
 	},
 	{
-		accessorKey: "rating",
-		header: "Rating",
+		accessorKey: "positiveReviews",
+		header: "Reviews",
 		cell: ({ row }) => {
-			return `${row.original.rating}/6`;
+			const pos = row.original.positiveReviews;
+			const neg = row.original.negativeReviews;
+			const total = pos + neg;
+			if (total === 0) return "—";
+			const percentage = Math.round((pos / total) * 100);
+			return `${percentage}% (${total.toLocaleString()})`;
 		},
 	},
 	{
