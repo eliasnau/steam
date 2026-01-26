@@ -15,7 +15,9 @@ export const db = drizzle(pool, { schema, casing: "snake_case" });
 
 export {
 	and,
+	avg,
 	count,
+	desc,
 	eq,
 	ilike,
 	inArray,

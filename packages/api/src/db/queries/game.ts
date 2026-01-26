@@ -1,5 +1,15 @@
 import { and, count, db, eq, ilike, inArray, or, sql } from "@repo/db";
-import { game, gameToGenres, genres } from "@repo/db/schema/index";
+import {
+	categories,
+	developers,
+	game,
+	gameToCategories,
+	gameToDevelopers,
+	gameToGenres,
+	gameToTags,
+	genres,
+	tags,
+} from "@repo/db/schema/index";
 
 export async function getGameBySteamId(steamId: number) {
 	return await db.select().from(game).where(eq(game.steamId, steamId)).limit(1);
@@ -95,6 +105,108 @@ export async function getGenresForGames(gameIds: string[]) {
 			{
 				genreId: string;
 				genre: { id: string; name: string };
+			}[]
+		>(),
+	);
+}
+
+export async function getTagsForGames(gameIds: string[]) {
+	if (gameIds.length === 0) return new Map();
+
+	const tagRows = await db
+		.select({
+			gameId: gameToTags.gameId,
+			tagId: gameToTags.tagId,
+			tId: tags.id,
+			tName: tags.name,
+		})
+		.from(gameToTags)
+		.innerJoin(tags, eq(tags.id, gameToTags.tagId))
+		.where(inArray(gameToTags.gameId, gameIds));
+
+	return tagRows.reduce(
+		(acc, r) => {
+			const list = acc.get(r.gameId) ?? [];
+			list.push({
+				tagId: r.tagId,
+				tag: { id: r.tId, name: r.tName },
+			});
+			acc.set(r.gameId, list);
+			return acc;
+		},
+		new Map<
+			string,
+			{
+				tagId: string;
+				tag: { id: string; name: string };
+			}[]
+		>(),
+	);
+}
+
+export async function getCategoriesForGames(gameIds: string[]) {
+	if (gameIds.length === 0) return new Map();
+
+	const categoryRows = await db
+		.select({
+			gameId: gameToCategories.gameId,
+			categoryId: gameToCategories.categoryId,
+			cId: categories.id,
+			cName: categories.name,
+		})
+		.from(gameToCategories)
+		.innerJoin(categories, eq(categories.id, gameToCategories.categoryId))
+		.where(inArray(gameToCategories.gameId, gameIds));
+
+	return categoryRows.reduce(
+		(acc, r) => {
+			const list = acc.get(r.gameId) ?? [];
+			list.push({
+				categoryId: r.categoryId,
+				category: { id: r.cId, name: r.cName },
+			});
+			acc.set(r.gameId, list);
+			return acc;
+		},
+		new Map<
+			string,
+			{
+				categoryId: string;
+				category: { id: string; name: string };
+			}[]
+		>(),
+	);
+}
+
+export async function getDevelopersForGames(gameIds: string[]) {
+	if (gameIds.length === 0) return new Map();
+
+	const developerRows = await db
+		.select({
+			gameId: gameToDevelopers.gameId,
+			developerId: gameToDevelopers.developerId,
+			dId: developers.id,
+			dName: developers.name,
+		})
+		.from(gameToDevelopers)
+		.innerJoin(developers, eq(developers.id, gameToDevelopers.developerId))
+		.where(inArray(gameToDevelopers.gameId, gameIds));
+
+	return developerRows.reduce(
+		(acc, r) => {
+			const list = acc.get(r.gameId) ?? [];
+			list.push({
+				developerId: r.developerId,
+				developer: { id: r.dId, name: r.dName },
+			});
+			acc.set(r.gameId, list);
+			return acc;
+		},
+		new Map<
+			string,
+			{
+				developerId: string;
+				developer: { id: string; name: string };
 			}[]
 		>(),
 	);

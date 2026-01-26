@@ -14,6 +14,7 @@ import {
 	publishers,
 	publishersToGame,
 	tags,
+	user,
 } from "@repo/db/schema/index";
 import { z } from "zod";
 import { DB } from "../db";
@@ -26,7 +27,7 @@ export const gamesRouter = {
 				page: z.number().min(1).default(1),
 				limit: z.number().min(1).max(100).default(20),
 				search: z.string().optional(),
-				genreIds: z.array(z.string().uuid()).optional(),
+				genreIds: z.array(z.string()).optional(),
 			}),
 		)
 		.handler(async ({ input }) => {
@@ -65,11 +66,17 @@ export const gamesRouter = {
 			const totalPages = Math.ceil(totalCount / limit);
 
 			const gameIds = games.map((g) => g.id);
-			const genreMap = await DB.query.game.getGenresForGames(gameIds);
+			const [genreMap, tagMap, developerMap] = await Promise.all([
+				DB.query.game.getGenresForGames(gameIds),
+				DB.query.game.getTagsForGames(gameIds),
+				DB.query.game.getDevelopersForGames(gameIds),
+			]);
 
 			const data = games.map((g) => ({
 				...g,
 				genres: genreMap.get(g.id) ?? [],
+				tags: tagMap.get(g.id) ?? [],
+				developers: developerMap.get(g.id) ?? [],
 			}));
 
 			return {
@@ -92,7 +99,37 @@ export const gamesRouter = {
 	getById: publicProcedure
 		.input(z.object({ id: z.string() }))
 		.handler(async ({ input }) => {
-			return { id: input.id, name: "Game", description: null };
+			const gameData = await db.query.game.findFirst({
+				where: eq(game.id, input.id),
+			});
+
+			if (!gameData) {
+				throw new ORPCError("NOT_FOUND", {
+					message: "Spiel nicht gefunden",
+				});
+			}
+
+			let creatorName: string | null = null;
+			if (gameData.createdBy) {
+				const creator = await db.query.user.findFirst({
+					where: eq(user.id, gameData.createdBy),
+				});
+				creatorName = creator?.name ?? null;
+			}
+
+			const genreMap = await DB.query.game.getGenresForGames([gameData.id]);
+			const tagMap = await DB.query.game.getTagsForGames([gameData.id]);
+			const categoryMap = await DB.query.game.getCategoriesForGames([
+				gameData.id,
+			]);
+
+			return {
+				...gameData,
+				creatorName,
+				genres: genreMap.get(gameData.id) ?? [],
+				tags: tagMap.get(gameData.id) ?? [],
+				categories: categoryMap.get(gameData.id) ?? [],
+			};
 		}),
 
 	create: protectedProcedure
@@ -118,20 +155,14 @@ export const gamesRouter = {
 				shortDescription: z.string().optional(),
 				website: z.string().optional(),
 
-				genres: z.array(z.string().uuid("Ungültige Genre-ID")).optional(),
-				features: z.array(z.string().uuid("Ungültige Feature-ID")).optional(),
-				operatingSystems: z
-					.array(z.string().uuid("Ungültige Betriebssystem-ID"))
-					.optional(),
-				tags: z.array(z.string().uuid("Ungültige Tag-ID")).optional(),
-				developers: z
-					.array(z.string().uuid("Ungültige Entwickler-ID"))
-					.optional(),
-				publishers: z
-					.array(z.string().uuid("Ungültige Publisher-ID"))
-					.optional(),
+				genres: z.array(z.string()).optional(),
+				features: z.array(z.string()).optional(),
+				operatingSystems: z.array(z.string()).optional(),
+				tags: z.array(z.string()).optional(),
+				developers: z.array(z.string()).optional(),
+				publishers: z.array(z.string()).optional(),
 
-				franchiseId: z.string().uuid("Ungültige Franchise-ID").optional(),
+				franchiseId: z.string().optional(),
 			}),
 		)
 		.handler(async ({ input }) => {
@@ -561,7 +592,13 @@ export const gamesRouter = {
 						: [];
 
 				let price: string | null = null;
-				if (!gameData.is_free && gameData.package_groups?.[0]?.subs?.[0]) {
+				if (!gameData.is_free) {
+					if (!gameData.package_groups?.[0]?.subs?.[0]) {
+						throw new ORPCError("BAD_REQUEST", {
+							message:
+								"Preisinformationen für dieses kostenpflichtige Spiel nicht verfügbar",
+						});
+					}
 					const priceInCents =
 						gameData.package_groups[0].subs[0].price_in_cents_with_discount ||
 						0;
@@ -914,7 +951,13 @@ export const gamesRouter = {
 				const tagRecords = await DB.query.tags.getOrCreateTags(tagNames);
 
 				let price: string | null = null;
-				if (!gameData.is_free && gameData.package_groups?.[0]?.subs?.[0]) {
+				if (!gameData.is_free) {
+					if (!gameData.package_groups?.[0]?.subs?.[0]) {
+						throw new ORPCError("BAD_REQUEST", {
+							message:
+								"Preisinformationen für dieses kostenpflichtige Spiel nicht verfügbar",
+						});
+					}
 					const priceInCents =
 						gameData.package_groups[0].subs[0].price_in_cents_with_discount ||
 						0;

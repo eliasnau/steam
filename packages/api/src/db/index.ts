@@ -10,6 +10,9 @@ export const DB = {
 			getBySteamId: gameQueries.getGameBySteamId,
 			list: gameQueries.listGames,
 			getGenresForGames: gameQueries.getGenresForGames,
+			getTagsForGames: gameQueries.getTagsForGames,
+			getCategoriesForGames: gameQueries.getCategoriesForGames,
+			getDevelopersForGames: gameQueries.getDevelopersForGames,
 		},
 		tags: {
 			getOrCreateTags: tagQueries.getOrCreateTags,
