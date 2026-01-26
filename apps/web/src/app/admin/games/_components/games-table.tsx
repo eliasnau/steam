@@ -18,6 +18,7 @@ import {
 	XIcon,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -182,9 +183,9 @@ const createColumns = (): ColumnDef<GameRow>[] => [
 							}
 						/>
 						<MenuPopup align="end">
-							<MenuItem onClick={() => console.log("View game:", game)}>
-								Anzeigen
-							</MenuItem>
+							<Link href={`/admin/games/${game.id}` as any}>
+								<MenuItem>Anzeigen</MenuItem>
+							</Link>
 							<MenuItem onClick={() => console.log("Edit game:", game)}>
 								Bearbeiten
 							</MenuItem>
@@ -413,6 +414,18 @@ export default function GamesTable({
 							<TableRow
 								key={row.id}
 								data-state={row.getIsSelected() ? "selected" : undefined}
+								className="cursor-pointer"
+								onClick={(e) => {
+									// Don't navigate if clicking on action buttons or their children
+									const target = e.target as HTMLElement;
+									if (
+										target.closest("button") ||
+										target.closest('[role="menuitem"]')
+									) {
+										return;
+									}
+									window.location.href = `/admin/games/${row.original.id}`;
+								}}
 							>
 								{row.getVisibleCells().map((cell) => (
 									<TableCell key={cell.id}>

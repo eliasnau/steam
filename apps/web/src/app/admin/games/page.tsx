@@ -55,14 +55,9 @@ function GamesPageContent() {
 		genreIds: parseAsArrayOf(parseAsString).withDefault([]),
 	});
 
-	const UUID_REGEX =
-		/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 	const validGenreIds =
 		genreIds.length > 0
-			? genreIds.filter(
-					(id) => id && id.trim().length > 0 && UUID_REGEX.test(id),
-				)
+			? genreIds.filter((id) => id && id.trim().length > 0)
 			: [];
 
 	const { data, isPending, error, refetch } = useQuery(
@@ -96,7 +91,7 @@ function GamesPageContent() {
 
 	const handleGenreFilterChange = (newGenreIds: string[]) => {
 		const validGenreIds = newGenreIds.filter(
-			(id) => id && id.trim().length > 0 && UUID_REGEX.test(id),
+			(id) => id && id.trim().length > 0,
 		);
 		setPagination({ page: 1, genreIds: validGenreIds });
 	};
