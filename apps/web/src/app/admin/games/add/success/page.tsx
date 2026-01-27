@@ -2,9 +2,10 @@ import { auth } from "@repo/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { forbidden, redirect, unauthorized } from "next/navigation";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 
-export default async function AddGameSuccessPage({
+async function AddGameSuccessPageContent({
 	searchParams,
 }: {
 	searchParams: Promise<{ name?: string; steamId?: string; id?: string }>;
@@ -31,7 +32,7 @@ export default async function AddGameSuccessPage({
 	const params = await searchParams;
 
 	if (!params.name || !params.steamId) {
-		return redirect("/admin/add");
+		return redirect("/admin/games/add");
 	}
 
 	return (
@@ -44,6 +45,7 @@ export default async function AddGameSuccessPage({
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
+							aria-label="Success checkmark"
 						>
 							<path
 								strokeLinecap="round"
@@ -69,7 +71,7 @@ export default async function AddGameSuccessPage({
 				</div>
 
 				<div className="space-y-3">
-					<Link href="/admin/add" className="block">
+					<Link href="/admin/games/add" className="block">
 						<Button className="w-full" size="lg">
 							Weiteres Spiel hinzufügen
 						</Button>
@@ -82,5 +84,17 @@ export default async function AddGameSuccessPage({
 				</div>
 			</div>
 		</div>
+	);
+}
+
+export default function AddGameSuccessPage({
+	searchParams,
+}: {
+	searchParams: Promise<{ name?: string; steamId?: string; id?: string }>;
+}) {
+	return (
+		<Suspense fallback={<div />}>
+			<AddGameSuccessPageContent searchParams={searchParams} />
+		</Suspense>
 	);
 }
