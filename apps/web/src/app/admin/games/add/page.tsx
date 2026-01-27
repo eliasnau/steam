@@ -1,9 +1,10 @@
 import { auth } from "@repo/auth";
 import { headers } from "next/headers";
 import { forbidden, redirect, unauthorized } from "next/navigation";
+import { Suspense } from "react";
 import AddGameForm from "./_components/add-game-form";
 
-export default async function DashboardPage() {
+async function DashboardPageContent() {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -11,15 +12,15 @@ export default async function DashboardPage() {
 	const data = await auth.api.userHasPermission({
 		body: {
 			userId: session?.user.id,
-			permissions: { "game": ["create"] }
+			permissions: { game: ["create"] },
 		},
 	});
 
 	if (!session?.user) {
-		return unauthorized()
+		return unauthorized();
 	}
 
-	if(!data.success) {
+	if (!data.success) {
 		return forbidden();
 	}
 
@@ -28,5 +29,13 @@ export default async function DashboardPage() {
 			<h1>Neues Spiel hinzufügen</h1>
 			<AddGameForm />
 		</div>
+	);
+}
+
+export default function DashboardPage() {
+	return (
+		<Suspense fallback={<div />}>
+			<DashboardPageContent />
+		</Suspense>
 	);
 }

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { client, orpc } from "@/utils/orpc";
 import { GameDetailClient } from "./game-detail-client";
 
@@ -6,7 +7,7 @@ interface PageProps {
 	params: Promise<{ id: string }>;
 }
 
-export default async function GameDetailPage({ params }: PageProps) {
+async function GameDetailContent({ params }: PageProps) {
 	const { id } = await params;
 
 	try {
@@ -22,4 +23,12 @@ export default async function GameDetailPage({ params }: PageProps) {
 	} catch (error) {
 		notFound();
 	}
+}
+
+export default function GameDetailPage({ params }: PageProps) {
+	return (
+		<Suspense fallback={<div className="dark min-h-screen bg-background" />}>
+			<GameDetailContent params={params} />
+		</Suspense>
+	);
 }

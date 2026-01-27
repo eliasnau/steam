@@ -9,7 +9,7 @@ import {
 	Star,
 } from "lucide-react";
 import Link from "next/link";
-import { use } from "react";
+import { Suspense, use } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,7 +36,7 @@ interface GameDetailsPageProps {
 	}>;
 }
 
-export default function GameDetailsPage({ params }: GameDetailsPageProps) {
+function GameDetailsContent({ params }: GameDetailsPageProps) {
 	const { id } = use(params);
 
 	const {
@@ -381,5 +381,50 @@ export default function GameDetailsPage({ params }: GameDetailsPageProps) {
 				</Frame>
 			</div>
 		</div>
+	);
+}
+
+export default function GameDetailsPage({ params }: GameDetailsPageProps) {
+	return (
+		<Suspense
+			fallback={
+				<div className="container mx-auto">
+					<Header className="mb-4">
+						<HeaderContent>
+							<div className="flex items-center gap-2">
+								<Link href="/admin/games">
+									<Button variant="ghost" size="sm">
+										<ArrowLeft className="h-4 w-4" />
+									</Button>
+								</Link>
+								<div>
+									<HeaderTitle>
+										<Skeleton className="h-8 w-64" />
+									</HeaderTitle>
+									<HeaderDescription>Details zum Spiel</HeaderDescription>
+								</div>
+							</div>
+						</HeaderContent>
+					</Header>
+					<div className="space-y-4">
+						<Frame>
+							<FramePanel className="p-6">
+								<div className="flex flex-col gap-6 lg:flex-row">
+									<Skeleton className="aspect-video w-full rounded-lg lg:w-1/3" />
+									<div className="flex-1 space-y-3">
+										<Skeleton className="h-8 w-3/4" />
+										<Skeleton className="h-4 w-full" />
+										<Skeleton className="h-4 w-full" />
+										<Skeleton className="h-4 w-2/3" />
+									</div>
+								</div>
+							</FramePanel>
+						</Frame>
+					</div>
+				</div>
+			}
+		>
+			<GameDetailsContent params={params} />
+		</Suspense>
 	);
 }
