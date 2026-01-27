@@ -120,13 +120,6 @@ export function Hero({
 
 			<div className="mx-auto max-w-7xl px-6 py-20">
 				<div className="flex flex-col items-center text-center">
-					<div className="glow-cyan mb-8 flex items-center gap-2 rounded-full border border-neon-cyan/30 bg-neon-cyan/5 px-5 py-2.5">
-						<Sparkles className="h-4 w-4 animate-pulse text-neon-cyan" />
-						<span className="font-bold text-neon-cyan text-sm tracking-wider">
-							SCHULPROJEKT 2024
-						</span>
-					</div>
-
 					<h1 className="font-black text-5xl tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
 						<span className="block text-foreground">DIE ULTIMATIVE</span>
 						<span className="mt-2 block text-glow-cyan text-neon-cyan">
@@ -139,7 +132,7 @@ export function Hero({
 						<span className="font-semibold text-neon-cyan">
 							{totalGames}+ Spiele
 						</span>{" "}
-						mit detaillierten Informationen zu Genres, Tags, Preisen,
+						mit detaillierten Infos zu Genres, Tags, Preisen,
 						Entwicklern und Analysen.
 					</p>
 
@@ -177,20 +170,6 @@ export function Hero({
 								colorClasses={stat.colorClasses}
 							/>
 						))}
-					</div>
-
-					<div className="mt-20 flex animate-float flex-col items-center gap-3">
-						<a
-							href="#games"
-							className="flex flex-col items-center gap-2 text-muted-foreground transition-colors hover:text-neon-cyan"
-						>
-							<span className="font-bold text-[10px] uppercase tracking-[0.2em]">
-								Scrolle zum Entdecken
-							</span>
-							<div className="flex h-10 w-6 items-start justify-center rounded-full border-2 border-neon-cyan/30 p-1.5">
-								<div className="h-2 w-1 animate-bounce rounded-full bg-neon-cyan" />
-							</div>
-						</a>
 					</div>
 				</div>
 			</div>

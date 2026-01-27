@@ -77,7 +77,7 @@ function CustomDropdown({
 	}, [isOpen]);
 
 	return (
-		<div ref={dropdownRef} className="relative">
+		<div ref={dropdownRef} className="relative dark">
 			<button
 				type="button"
 				onClick={() => setIsOpen(!isOpen)}
