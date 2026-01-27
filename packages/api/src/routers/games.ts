@@ -779,7 +779,7 @@ export const gamesRouter = {
 					}
 				}
 
-				if (!gameData.type !== "game") {
+				if (gameData.type !== "game") {
 					throw new ORPCError("NOT_FOUND", {
 						message: "Kein Spiel",
 					});
