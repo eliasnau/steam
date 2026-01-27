@@ -19,6 +19,7 @@ import {
 import { z } from "zod";
 import { DB } from "../db";
 import { protectedProcedure, publicProcedure } from "../index";
+import { requirePermission } from "../middleware/permission";
 
 export const gamesRouter = {
 	list: publicProcedure
@@ -139,6 +140,7 @@ export const gamesRouter = {
 		}),
 
 	create: protectedProcedure
+	.use(requirePermission({game: ["create"]}))
 		.input(
 			z.object({
 				steamId: z.number().min(1, "Steam-ID ist erforderlich"),
@@ -679,6 +681,7 @@ export const gamesRouter = {
 		}),
 
 	createFromSteam: protectedProcedure
+		.use(requirePermission({game: ["create"]}))
 		.input(z.object({ steamId: z.number().min(1) }))
 		.handler(async ({ input, context }) => {
 			try {

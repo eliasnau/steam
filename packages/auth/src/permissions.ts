@@ -25,3 +25,11 @@ export const maintainer = ac.newRole({
     publisher: ["create", "update", "delete"],
     developer: ["create", "update", "delete"],
 });
+
+export type PermissionResource = keyof typeof statement;
+export type PermissionAction<T extends PermissionResource> =
+	(typeof statement)[T][number];
+
+export type PermissionCheck = {
+	[K in PermissionResource]?: PermissionAction<K>[];
+};
