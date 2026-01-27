@@ -77,7 +77,7 @@ function CustomDropdown({
 	}, [isOpen]);
 
 	return (
-		<div ref={dropdownRef} className="relative dark">
+		<div ref={dropdownRef} className="relative">
 			<button
 				type="button"
 				onClick={() => setIsOpen(!isOpen)}
@@ -172,7 +172,7 @@ export function LandingGamesTable() {
 	return (
 		<section
 			id="games"
-			className="relative border-primary/10 border-y bg-secondary/30"
+			className="dark relative border-primary/10 border-y bg-secondary/30"
 		>
 			<div className="absolute inset-0 -z-10">
 				<div className="absolute top-0 right-0 left-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />

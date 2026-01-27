@@ -40,7 +40,7 @@ async function HomePageContent() {
 export default function HomePage() {
 	return (
 		<div className="dark min-h-screen bg-background">
-			<main>
+			<main className="dark">
 				<Suspense fallback={<div className="min-h-screen" />}>
 					<HomePageContent />
 				</Suspense>
