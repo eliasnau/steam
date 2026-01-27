@@ -24,27 +24,77 @@ interface ListGamesOptions {
 	limit: number;
 	search?: string;
 	genreIds?: string[];
+	priceRange?: "all" | "free" | "under20" | "20to40" | "over40";
 }
 
 export async function listGames(options: ListGamesOptions) {
-	const { page, limit, search, genreIds } = options;
+	const { page, limit, search, genreIds, priceRange } = options;
 	const offset = (page - 1) * limit;
 
-	const gameWhere = and(
-		search
-			? or(
-					ilike(game.name, `%${search}%`),
-					sql`CAST(${game.steamId} AS TEXT) LIKE ${`%${search}%`}`,
-				)
-			: undefined,
-		genreIds?.length
-			? sql`${game.id} in (
+	const conditions = [];
+
+	if (search) {
+		conditions.push(
+			or(
+				ilike(game.name, `%${search}%`),
+				sql`CAST(${game.steamId} AS TEXT) LIKE ${`%${search}%`}`,
+			),
+		);
+	}
+
+
+	if (genreIds?.length) {
+		conditions.push(
+			sql`${game.id} in (
               select ${gameToGenres.gameId}
               from ${gameToGenres}
               where ${inArray(gameToGenres.genreId, genreIds)}
-            )`
-			: undefined,
-	);
+            )`,
+		);
+	}
+
+
+	if (priceRange && priceRange !== "all") {
+		switch (priceRange) {
+			case "free":
+				conditions.push(
+					or(
+						eq(game.price, "0"),
+						eq(game.price, "0.00"),
+						sql`${game.price} IS NULL`,
+					),
+				);
+				break;
+			case "under20":
+				conditions.push(
+					and(
+						sql`${game.price} IS NOT NULL`,
+						sql`CAST(${game.price} AS DECIMAL) > 0`,
+						sql`CAST(${game.price} AS DECIMAL) < 20`,
+					),
+				);
+				break;
+			case "20to40":
+				conditions.push(
+					and(
+						sql`${game.price} IS NOT NULL`,
+						sql`CAST(${game.price} AS DECIMAL) >= 20`,
+						sql`CAST(${game.price} AS DECIMAL) <= 40`,
+					),
+				);
+				break;
+			case "over40":
+				conditions.push(
+					and(
+						sql`${game.price} IS NOT NULL`,
+						sql`CAST(${game.price} AS DECIMAL) > 40`,
+					),
+				);
+				break;
+		}
+	}
+
+	const gameWhere = conditions.length > 0 ? and(...conditions) : undefined;
 
 	const games = await db
 		.select({

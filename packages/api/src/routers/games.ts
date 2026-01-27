@@ -28,6 +28,9 @@ export const gamesRouter = {
 				limit: z.number().min(1).max(100).default(20),
 				search: z.string().optional(),
 				genreIds: z.array(z.string()).optional(),
+				priceRange: z
+					.enum(["all", "free", "under20", "20to40", "over40"])
+					.optional(),
 			}),
 		)
 		.handler(async ({ input }) => {
@@ -61,6 +64,7 @@ export const gamesRouter = {
 				limit,
 				search,
 				genreIds,
+				priceRange: input.priceRange,
 			});
 
 			const totalPages = Math.ceil(totalCount / limit);
@@ -117,10 +121,11 @@ export const gamesRouter = {
 				creatorName = creator?.name ?? null;
 			}
 
-			const genreMap = await DB.query.game.getGenresForGames([gameData.id]);
-			const tagMap = await DB.query.game.getTagsForGames([gameData.id]);
-			const categoryMap = await DB.query.game.getCategoriesForGames([
-				gameData.id,
+			const [genreMap, tagMap, categoryMap, developerMap] = await Promise.all([
+				DB.query.game.getGenresForGames([gameData.id]),
+				DB.query.game.getTagsForGames([gameData.id]),
+				DB.query.game.getCategoriesForGames([gameData.id]),
+				DB.query.game.getDevelopersForGames([gameData.id]),
 			]);
 
 			return {
@@ -129,6 +134,7 @@ export const gamesRouter = {
 				genres: genreMap.get(gameData.id) ?? [],
 				tags: tagMap.get(gameData.id) ?? [],
 				categories: categoryMap.get(gameData.id) ?? [],
+				developers: developerMap.get(gameData.id) ?? [],
 			};
 		}),
 
