@@ -2,6 +2,7 @@ import { auth } from "@repo/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { forbidden, unauthorized } from "next/navigation";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import AddCategorySheet from "./_components/add-category-sheet";
 import AddDeveloperSheet from "./_components/add-developer-sheet";
@@ -11,7 +12,7 @@ import AddOperatingSystemSheet from "./_components/add-operating-system-sheet";
 import AddPublisherSheet from "./_components/add-publisher-sheet";
 import AddTagSheet from "./_components/add-tag-sheet";
 
-export default async function AdminDashboardPage() {
+async function AdminDashboardPageContent() {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
@@ -88,5 +89,13 @@ export default async function AdminDashboardPage() {
 				/>
 			</div>
 		</div>
+	);
+}
+
+export default function AdminDashboardPage() {
+	return (
+		<Suspense fallback={<div />}>
+			<AdminDashboardPageContent />
+		</Suspense>
 	);
 }
