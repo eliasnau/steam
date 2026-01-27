@@ -28,3 +28,5 @@ export const auth = betterAuth({
     }),
     nextCookies()],
 });
+
+export type { PermissionCheck }from "./permissions"
