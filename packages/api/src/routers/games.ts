@@ -195,39 +195,39 @@ export const gamesRouter = {
 				] = await Promise.all([
 					input.genres && input.genres.length > 0
 						? db
-								.select({ id: genres.id })
-								.from(genres)
-								.where(inArray(genres.id, input.genres))
+							.select({ id: genres.id })
+							.from(genres)
+							.where(inArray(genres.id, input.genres))
 						: Promise.resolve([]),
 					input.features && input.features.length > 0
 						? db
-								.select({ id: categories.id })
-								.from(categories)
-								.where(inArray(categories.id, input.features))
+							.select({ id: categories.id })
+							.from(categories)
+							.where(inArray(categories.id, input.features))
 						: Promise.resolve([]),
 					input.operatingSystems && input.operatingSystems.length > 0
 						? db
-								.select({ id: operatingSystems.id })
-								.from(operatingSystems)
-								.where(inArray(operatingSystems.id, input.operatingSystems))
+							.select({ id: operatingSystems.id })
+							.from(operatingSystems)
+							.where(inArray(operatingSystems.id, input.operatingSystems))
 						: Promise.resolve([]),
 					input.tags && input.tags.length > 0
 						? db
-								.select({ id: tags.id })
-								.from(tags)
-								.where(inArray(tags.id, input.tags))
+							.select({ id: tags.id })
+							.from(tags)
+							.where(inArray(tags.id, input.tags))
 						: Promise.resolve([]),
 					input.developers && input.developers.length > 0
 						? db
-								.select({ id: developers.id })
-								.from(developers)
-								.where(inArray(developers.id, input.developers))
+							.select({ id: developers.id })
+							.from(developers)
+							.where(inArray(developers.id, input.developers))
 						: Promise.resolve([]),
 					input.publishers && input.publishers.length > 0
 						? db
-								.select({ id: publishers.id })
-								.from(publishers)
-								.where(inArray(publishers.id, input.publishers))
+							.select({ id: publishers.id })
+							.from(publishers)
+							.where(inArray(publishers.id, input.publishers))
 						: Promise.resolve([]),
 				]);
 
@@ -546,9 +546,9 @@ export const gamesRouter = {
 				const categoryRecords =
 					categorySteamIds.length > 0
 						? await db
-								.select({ id: categories.id, steamId: categories.steamId })
-								.from(categories)
-								.where(inArray(categories.steamId, categorySteamIds))
+							.select({ id: categories.id, steamId: categories.steamId })
+							.from(categories)
+							.where(inArray(categories.steamId, categorySteamIds))
 						: [];
 
 				const genreSteamIds =
@@ -557,9 +557,9 @@ export const gamesRouter = {
 				const genreRecords =
 					genreSteamIds.length > 0
 						? await db
-								.select({ id: genres.id, steamId: genres.steamId })
-								.from(genres)
-								.where(inArray(genres.steamId, genreSteamIds))
+							.select({ id: genres.id, steamId: genres.steamId })
+							.from(genres)
+							.where(inArray(genres.steamId, genreSteamIds))
 						: [];
 
 				const osNames: string[] = [];
@@ -570,30 +570,30 @@ export const gamesRouter = {
 				const osRecords =
 					osNames.length > 0
 						? await db
-								.select({
-									id: operatingSystems.id,
-									name: operatingSystems.name,
-								})
-								.from(operatingSystems)
-								.where(inArray(operatingSystems.name, osNames))
+							.select({
+								id: operatingSystems.id,
+								name: operatingSystems.name,
+							})
+							.from(operatingSystems)
+							.where(inArray(operatingSystems.name, osNames))
 						: [];
 
 				const developerNames = gameData.developers || [];
 				const developerRecords =
 					developerNames.length > 0
 						? await db
-								.select({ id: developers.id, name: developers.name })
-								.from(developers)
-								.where(inArray(developers.name, developerNames))
+							.select({ id: developers.id, name: developers.name })
+							.from(developers)
+							.where(inArray(developers.name, developerNames))
 						: [];
 
 				const publisherNames = gameData.publishers || [];
 				const publisherRecords =
 					publisherNames.length > 0
 						? await db
-								.select({ id: publishers.id, name: publishers.name })
-								.from(publishers)
-								.where(inArray(publishers.name, publisherNames))
+							.select({ id: publishers.id, name: publishers.name })
+							.from(publishers)
+							.where(inArray(publishers.name, publisherNames))
 						: [];
 
 				let price: string | null = null;
@@ -621,7 +621,7 @@ export const gamesRouter = {
 						if (!Number.isNaN(parsedDate.getTime())) {
 							releasedAt = parsedDate.toISOString().split("T")[0];
 						}
-					} catch {}
+					} catch { }
 				}
 
 				return {
@@ -725,6 +725,7 @@ export const gamesRouter = {
 							header_image?: string;
 							short_description?: string;
 							website?: string;
+							type?: string;
 							release_date?: {
 								coming_soon: boolean;
 								date?: string;
@@ -778,8 +779,14 @@ export const gamesRouter = {
 					}
 				}
 
-				const categorySteamIds =
-					gameData.categories?.map((c: { id: number }) => c.id) || [];
+				if (!gameData.type !== "game") {
+					throw new ORPCError("NOT_FOUND", {
+						message: "Kein Spiel",
+					});
+				}
+
+					const categorySteamIds =
+						gameData.categories?.map((c: { id: number }) => c.id) || [];
 				const categoryRecords: Array<{ id: string; steamId: number }> = [];
 
 				if (categorySteamIds.length > 0) {
@@ -857,12 +864,12 @@ export const gamesRouter = {
 				const osRecords =
 					osNames.length > 0
 						? await db
-								.select({
-									id: operatingSystems.id,
-									name: operatingSystems.name,
-								})
-								.from(operatingSystems)
-								.where(inArray(operatingSystems.name, osNames))
+							.select({
+								id: operatingSystems.id,
+								name: operatingSystems.name,
+							})
+							.from(operatingSystems)
+							.where(inArray(operatingSystems.name, osNames))
 						: [];
 
 				const developerNames = gameData.developers || [];
@@ -979,7 +986,7 @@ export const gamesRouter = {
 								const dateStr = parsedDate.toISOString().split("T")[0];
 								return dateStr || new Date().toISOString().split("T")[0]!;
 							}
-						} catch {}
+						} catch { }
 					}
 					return new Date().toISOString().split("T")[0]!;
 				})();
