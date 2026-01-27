@@ -5,8 +5,9 @@ const nextConfig: NextConfig = {
   typedRoutes: true,
   reactCompiler: true,
   experimental: {
-    authInterrupts: true
+    authInterrupts: true,
   },
+  cacheComponents: true,
   typescript: {
     ignoreBuildErrors: true
   }
