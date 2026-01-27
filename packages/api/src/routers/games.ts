@@ -492,11 +492,10 @@ export const gamesRouter = {
 							genres?: Array<{ id: string; description: string }>;
 							developers?: string[];
 							publishers?: string[];
-							package_groups?: Array<{
-								subs?: Array<{
-									price_in_cents_with_discount?: number;
-								}>;
-							}>;
+							price_overview?: {
+								initial?: number;
+								final?: number;
+							}
 						};
 					}
 				>;
@@ -599,14 +598,14 @@ export const gamesRouter = {
 
 				let price: string | null = null;
 				if (!gameData.is_free) {
-					if (!gameData.package_groups?.[0]?.subs?.[0]) {
+					if (!gameData.price_overview?.initial) {
 						throw new ORPCError("BAD_REQUEST", {
 							message:
 								"Preisinformationen für dieses kostenpflichtige Spiel nicht verfügbar",
 						});
 					}
 					const priceInCents =
-						gameData.package_groups[0].subs[0].price_in_cents_with_discount ||
+						gameData.price_overview.initial ||
 						0;
 					price = (priceInCents / 100).toFixed(2);
 				}
@@ -739,11 +738,9 @@ export const gamesRouter = {
 							genres?: Array<{ id: string; description: string }>;
 							developers?: string[];
 							publishers?: string[];
-							package_groups?: Array<{
-								subs?: Array<{
-									price_in_cents_with_discount?: number;
-								}>;
-							}>;
+							price_overview: {
+								initial?: number
+							}
 						};
 					}
 				>;
@@ -958,14 +955,14 @@ export const gamesRouter = {
 
 				let price: string | null = null;
 				if (!gameData.is_free) {
-					if (!gameData.package_groups?.[0]?.subs?.[0]) {
+					if (!gameData.price_overview.initial) {
 						throw new ORPCError("BAD_REQUEST", {
 							message:
 								"Preisinformationen für dieses kostenpflichtige Spiel nicht verfügbar",
 						});
 					}
 					const priceInCents =
-						gameData.package_groups[0].subs[0].price_in_cents_with_discount ||
+						gameData.price_overview.initial ||
 						0;
 					price = (priceInCents / 100).toFixed(2);
 				}
