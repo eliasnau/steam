@@ -121,9 +121,9 @@ export function Hero({
 			<div className="mx-auto max-w-7xl px-6 py-20">
 				<div className="flex flex-col items-center text-center">
 					<h1 className="font-black text-5xl tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-						<span className="block text-foreground">DIE</span>
+						<span className="block text-foreground">STEAM</span>
 						<span className="mt-2 block text-glow-cyan text-neon-cyan">
-							STEAM DATENBANK
+							ENGINE
 						</span>
 					</h1>
 
