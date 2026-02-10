@@ -23,8 +23,8 @@ const lemonmilk_reg = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "repo",
-  description: "repo",
+  title: "SteamEngine",
+  description: "Steamgame Database",
 };
 
 export default function RootLayout({
