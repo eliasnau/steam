@@ -12,7 +12,8 @@ const geistSans = localFont({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+const geistMono = localFont({
+  src: './../font/LEMONMILK-Regular.otf',
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
