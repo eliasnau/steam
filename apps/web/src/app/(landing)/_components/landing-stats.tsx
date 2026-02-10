@@ -328,7 +328,7 @@ export function LandingStats({
 								</div>
 								<div>
 									<CardTitle className="font-black text-lg tracking-wide">
-										TOP ENTWICKLER
+										DIE BESTEN ENTWICKLER STUDIOS
 									</CardTitle>
 									<CardDescription>
 										Bestbewertete Studios (mind. 3 Spiele)
@@ -385,10 +385,10 @@ export function LandingStats({
 							</div>
 							<div>
 								<CardTitle className="font-black text-lg tracking-wide">
-									TOP BEWERTETE SPIELE
+									AM BESTEN BEWERTETE SPIELE
 								</CardTitle>
 								<CardDescription>
-									Bestbewertete Titel (mind. 100 Bewertungen)
+									Bestbewertete Titel (mit mind. 100 Bewertungen)
 								</CardDescription>
 							</div>
 						</div>
@@ -446,7 +446,7 @@ export function LandingStats({
 							</div>
 							<div>
 								<CardTitle className="font-black text-lg tracking-wide">
-									TRENDIGE TAGS
+									POPULÄRE TAGS
 								</CardTitle>
 								<CardDescription>
 									Beliebteste Tags über alle Spiele
