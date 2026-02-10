@@ -1,1 +1,1 @@
-.
+https://nextjs.org/docs/pages/getting-started/fonts#local-fonts
