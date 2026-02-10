@@ -6,21 +6,25 @@ import "../index.css";
 import Providers from "@/components/providers";
 import { Suspense } from "react";
 
-const geistSans = localFont({
-  src: './../font/LEMONMILK-Regular.otf',
+const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = localFont({
-  src: './../font/LEMONMILK-Regular.otf',
+const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
+const lemonmilk_reg = localFont({
+  src: './LEMONMILK-Regular.otf',
+  variable: "--lemonmilk-reg",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "repo",
-  description: "repo",
+  title: "SteamEngine",
+  description: "Steamgame Database",
 };
 
 export default function RootLayout({
