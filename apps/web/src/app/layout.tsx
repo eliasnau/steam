@@ -6,7 +6,8 @@ import "../index.css";
 import Providers from "@/components/providers";
 import { Suspense } from "react";
 
-const geistSans = Geist({
+const geistSans = localFont({
+  src: './../font/LEMONMILK-Regular.otf',
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
