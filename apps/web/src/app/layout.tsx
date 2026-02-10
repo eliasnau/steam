@@ -7,19 +7,19 @@ import Providers from "@/components/providers";
 import { Suspense } from "react";
 
 const geistSans = localFont({
-  src: './../font/LEMONMILK-Regular.otf',
+  src: './LEMONMILK-Regular.otf',
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
 const geistMono = localFont({
-  src: './../font/LEMONMILK-Regular.otf',
+  src: './LEMONMILK-Regular.otf',
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "repo",
+  title: "SteamEngine",
   description: "repo",
 };
 
