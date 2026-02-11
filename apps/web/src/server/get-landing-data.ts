@@ -114,21 +114,21 @@ export const getLandingData = async () => {
 		db
 			.select({
 				range: sql<string>`case 
-					when ${game.price} = 0 or ${game.price} is null then 'Free'
-					when ${game.price} > 0 and ${game.price} <= 10 then 'Under $10'
-					when ${game.price} > 10 and ${game.price} <= 20 then 'Under $20'
-					when ${game.price} > 20 and ${game.price} <= 50 then 'Under $50'
-					else 'Over $50'
+					when ${game.price} = 0 or ${game.price} is null then 'Kostenlos'
+					when ${game.price} > 0 and ${game.price} <= 10 then 'Unter $10'
+					when ${game.price} > 10 and ${game.price} <= 20 then 'Unter $20'
+					when ${game.price} > 20 and ${game.price} <= 50 then 'Unter $50'
+					else 'Über $50'
 				end`.as("range"),
 				count: count(),
 			})
 			.from(game)
 			.groupBy(sql`case 
-				when ${game.price} = 0 or ${game.price} is null then 'Free'
-				when ${game.price} > 0 and ${game.price} <= 10 then 'Under $10'
-				when ${game.price} > 10 and ${game.price} <= 20 then 'Under $20'
-				when ${game.price} > 20 and ${game.price} <= 50 then 'Under $50'
-				else 'Over $50'
+				when ${game.price} = 0 or ${game.price} is null then 'Kostenlos'
+				when ${game.price} > 0 and ${game.price} <= 10 then 'Unter $10'
+				when ${game.price} > 10 and ${game.price} <= 20 then 'Unter $20'
+				when ${game.price} > 20 and ${game.price} <= 50 then 'Unter $50'
+				else 'Über $50'
 			end`)
 			.orderBy(sql`min(case 
 				when ${game.price} = 0 or ${game.price} is null then 1
