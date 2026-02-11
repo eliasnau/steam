@@ -60,11 +60,11 @@ const COLORS = [
 const chartConfig = {
 	count: { label: "Spiele", color: "oklch(0.7 0.2 180)" },
 	name: { label: "Genre" },
-	Free: { label: "Kostenlos", color: "oklch(0.7 0.2 180)" },
-	"Under $10": { label: "Unter $10", color: "oklch(0.65 0.25 320)" },
-	"Under $20": { label: "Unter $20", color: "oklch(0.75 0.18 90)" },
-	"Under $50": { label: "Unter $50", color: "oklch(0.6 0.2 260)" },
-	"Over $50": { label: "Über $50", color: "oklch(0.7 0.22 30)" },
+	Kostenlos: { label: "Kostenlos", color: "oklch(0.7 0.2 180)" },
+	"Unter $10": { label: "Unter $10", color: "oklch(0.65 0.25 320)" },
+	"Unter $20": { label: "Unter $20", color: "oklch(0.75 0.18 90)" },
+	"Unter $50": { label: "Unter $50", color: "oklch(0.6 0.2 260)" },
+	"Über $50": { label: "Über $50", color: "oklch(0.7 0.22 30)" },
 } satisfies import("@/components/ui/chart").ChartConfig;
 
 export function LandingStats({
@@ -331,7 +331,7 @@ export function LandingStats({
 										DIE BESTEN ENTWICKLER STUDIOS
 									</CardTitle>
 									<CardDescription>
-										Bestbewertete Studios (mind. 3 Spiele)
+										Bestbewertete Studios (mit mind. 3 Spiele)
 									</CardDescription>
 								</div>
 							</div>
