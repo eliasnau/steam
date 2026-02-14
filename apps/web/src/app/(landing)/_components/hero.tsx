@@ -150,7 +150,7 @@ export function Hero({
 						<Button
 							size="lg"
 							variant="outline"
-							className="h-14 border-neon-pink/50 bg-transparent px-10 font-bold text-base text-neon-pink tracking-wider transition-all duration-300 hover:scale-105 hover:border-neon-pink hover:bg-neon-pink/10"
+							className="h-14 border-neon-pink/50 bg-transparent px-10 font-bold text-base text-[#7800FF] tracking-wider transition-all duration-300 hover:scale-105 hover:border-neon-pink hover:bg-neon-pink/10"
 							render={(props) => (
 								<a {...props} href="#statistics">
 									<TrendingUp className="mr-2 h-5 w-5" />
