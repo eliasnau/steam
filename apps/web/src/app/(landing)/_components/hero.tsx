@@ -121,8 +121,8 @@ export function Hero({
 			<div className="mx-auto max-w-7xl px-6 py-20">
 				<div className="flex flex-col items-center text-center">
 					<h1 className="font-black text-5xl tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-						<span className="block text-foreground">STEAM</span>
-						<span className="mt-2 block text-glow-cyan text-neon-cyan">
+						<span className="block text-foreground text-[rgb(192, 192, 192)]">STEAM</span>
+						<span className="mt-2 block text-glow-[rgb(135, 255, 0)] text-[rgb(135, 255, 0)]">
 							ENGINE
 						</span>
 					</h1>
@@ -139,7 +139,7 @@ export function Hero({
 					<div className="mt-12 flex flex-col items-center gap-4 sm:flex-row">
 						<Button
 							size="lg"
-							className="glow-cyan h-14 bg-neon-cyan px-10 font-bold text-base text-primary-foreground tracking-wider transition-all duration-300 hover:scale-105 hover:bg-neon-cyan/90"
+							className="glow-[rgb(135, 255, 0)] h-14 bg-[rgb(135, 255, 0)] px-10 font-bold text-base text-primary-foreground tracking-wider transition-all duration-300 hover:scale-105 hover:bg-[rgb(135, 255, 0)]/90"
 							render={(props) => (
 								<a {...props} href="#games">
 									<Database className="mr-2 h-5 w-5" />
