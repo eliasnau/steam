@@ -13,6 +13,7 @@ export const DB = {
 			getTagsForGames: gameQueries.getTagsForGames,
 			getCategoriesForGames: gameQueries.getCategoriesForGames,
 			getDevelopersForGames: gameQueries.getDevelopersForGames,
+			getPublishersForGames: gameQueries.getPublishersForGames,
 		},
 		tags: {
 			getOrCreateTags: tagQueries.getOrCreateTags,

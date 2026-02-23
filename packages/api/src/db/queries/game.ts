@@ -8,6 +8,8 @@ import {
 	gameToGenres,
 	gameToTags,
 	genres,
+	publishers,
+	publishersToGame,
 	tags,
 } from "@repo/db/schema/index";
 
@@ -257,6 +259,40 @@ export async function getDevelopersForGames(gameIds: string[]) {
 			{
 				developerId: string;
 				developer: { id: string; name: string };
+			}[]
+		>(),
+	);
+}
+
+export async function getPublishersForGames(gameIds: string[]) {
+	if (gameIds.length === 0) return new Map();
+
+	const publisherRows = await db
+		.select({
+			gameId: publishersToGame.gameId,
+			publisherId: publishersToGame.publisherId,
+			pId: publishers.id,
+			pName: publishers.name,
+		})
+		.from(publishersToGame)
+		.innerJoin(publishers, eq(publishers.id, publishersToGame.publisherId))
+		.where(inArray(publishersToGame.gameId, gameIds));
+
+	return publisherRows.reduce(
+		(acc, r) => {
+			const list = acc.get(r.gameId) ?? [];
+			list.push({
+				publisherId: r.publisherId,
+				publisher: { id: r.pId, name: r.pName },
+			});
+			acc.set(r.gameId, list);
+			return acc;
+		},
+		new Map<
+			string,
+			{
+				publisherId: string;
+				publisher: { id: string; name: string };
 			}[]
 		>(),
 	);
