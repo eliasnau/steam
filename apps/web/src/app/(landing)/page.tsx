@@ -15,12 +15,7 @@ async function HomePageContent() {
 
 	return (
 		<>
-			<Hero
-				totalGames={Number(data.stats?.totalGames) || 0}
-				gameImages={data.topRatedGames
-					.filter((g) => g.image)
-					.map((g) => ({ name: g.gameName, image: g.image! }))}
-			/>
+			<Hero totalGames={Number(data.stats?.totalGames) || 0} />
 			<Suspense>
 				<LandingGamesTable />
 			</Suspense>
