@@ -21,6 +21,7 @@ export const getLandingData = async () => {
 		popularTags,
 		topDevelopers,
 		topRatedGames,
+		heroGames,
 		stats,
 		priceDistribution,
 	] = await Promise.all([
@@ -77,6 +78,7 @@ export const getLandingData = async () => {
 			.select({
 				gameId: game.id,
 				gameName: game.name,
+				image: game.image,
 				rating:
 					sql<number>`case when (${game.positiveReviews} + ${game.negativeReviews}) > 0 then ${game.positiveReviews}::float / (${game.positiveReviews} + ${game.negativeReviews}) else 0 end`.as(
 						"rating",
@@ -88,13 +90,24 @@ export const getLandingData = async () => {
 				price: game.price,
 			})
 			.from(game)
-			.where(sql`(${game.positiveReviews} + ${game.negativeReviews}) >= 100`)
+			.where(sql`(${game.positiveReviews} + ${game.negativeReviews}) >= 100 and ${game.image} is not null`)
 			.orderBy(
 				desc(
 					sql`case when (${game.positiveReviews} + ${game.negativeReviews}) > 0 then ${game.positiveReviews}::float / (${game.positiveReviews} + ${game.negativeReviews}) else 0 end`,
 				),
 			)
-			.limit(5),
+			.limit(12),
+
+		db
+			.select({
+				gameId: game.id,
+				gameName: game.name,
+				image: game.image,
+			})
+			.from(game)
+			.where(sql`${game.image} is not null`)
+			.orderBy(desc(game.updatedAt))
+			.limit(24),
 
 		db
 			.select({
@@ -113,7 +126,7 @@ export const getLandingData = async () => {
 
 		db
 			.select({
-				range: sql<string>`case 
+				range: sql<string>`case
 					when ${game.price} = 0 or ${game.price} is null then 'Kostenlos'
 					when ${game.price} > 0 and ${game.price} <= 10 then 'Unter $10'
 					when ${game.price} > 10 and ${game.price} <= 20 then 'Unter $20'
@@ -123,14 +136,14 @@ export const getLandingData = async () => {
 				count: count(),
 			})
 			.from(game)
-			.groupBy(sql`case 
+			.groupBy(sql`case
 				when ${game.price} = 0 or ${game.price} is null then 'Kostenlos'
 				when ${game.price} > 0 and ${game.price} <= 10 then 'Unter $10'
 				when ${game.price} > 10 and ${game.price} <= 20 then 'Unter $20'
 				when ${game.price} > 20 and ${game.price} <= 50 then 'Unter $50'
 				else 'Über $50'
 			end`)
-			.orderBy(sql`min(case 
+			.orderBy(sql`min(case
 				when ${game.price} = 0 or ${game.price} is null then 1
 				when ${game.price} > 0 and ${game.price} <= 10 then 2
 				when ${game.price} > 10 and ${game.price} <= 20 then 3
@@ -144,6 +157,7 @@ export const getLandingData = async () => {
 		popularTags,
 		topDevelopers,
 		topRatedGames,
+		heroGames,
 		stats: stats[0],
 		priceDistribution,
 	};

@@ -182,6 +182,24 @@
 		0 0 20px oklch(0.65 0.25 320 / 0.4);
 }
 
+@keyframes scroll-up {
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(-33.33%);
+	}
+}
+
+@keyframes scroll-down {
+	0% {
+		transform: translateY(-33.33%);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
 @keyframes pulse-glow {
 	0%,
 	100% {
