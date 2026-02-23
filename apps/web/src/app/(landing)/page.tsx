@@ -1,6 +1,5 @@
 import { auth } from "@repo/auth";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getLandingData } from "@/server/get-landing-data";
 import { Hero } from "./_components/hero";
@@ -18,9 +17,9 @@ async function HomePageContent() {
 		<>
 			<Hero
 				totalGames={Number(data.stats?.totalGames) || 0}
-				totalGenres={data.topGenres.length}
-				totalTags={data.popularTags.length}
-				totalDevelopers={data.topDevelopers.length}
+				gameImages={data.topRatedGames
+					.filter((g) => g.image)
+					.map((g) => ({ name: g.gameName, image: g.image! }))}
 			/>
 			<Suspense>
 				<LandingGamesTable />
