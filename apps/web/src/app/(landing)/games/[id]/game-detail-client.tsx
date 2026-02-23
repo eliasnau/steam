@@ -14,6 +14,7 @@ import {
 	Users,
 } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -38,10 +39,87 @@ type GameData = {
 		developerId: string;
 		developer: { id: string; name: string };
 	}>;
+	publishers: Array<{
+		publisherId: string;
+		publisher: { id: string; name: string };
+	}>;
 };
 
 interface GameDetailClientProps {
 	game: GameData;
+}
+
+function StatTile({
+	icon,
+	label,
+	value,
+	detail,
+	accent,
+}: {
+	icon: ReactNode;
+	label: string;
+	value: string;
+	detail?: string;
+	accent: "cyan" | "pink" | "yellow" | "purple";
+}) {
+	const accentStyles = {
+		cyan: "border-neon-cyan/25 bg-neon-cyan/8 text-neon-cyan",
+		pink: "border-neon-pink/25 bg-neon-pink/8 text-neon-pink",
+		yellow: "border-neon-yellow/25 bg-neon-yellow/8 text-neon-yellow",
+		purple: "border-neon-purple/25 bg-neon-purple/8 text-neon-purple",
+	};
+
+	return (
+		<div className="rounded-none border border-border bg-card/50 p-4 backdrop-blur-sm">
+			<div className="mb-3 flex items-center gap-2">
+				<div
+					className={`flex h-10 w-10 items-center justify-center rounded-2xl border ${accentStyles[accent]}`}
+				>
+					{icon}
+				</div>
+				<span className="font-bold text-[11px] text-muted-foreground tracking-[0.18em] uppercase">
+					{label}
+				</span>
+			</div>
+			<p className="font-black text-2xl text-foreground tracking-tight">{value}</p>
+			{detail ? (
+				<p className="mt-1 text-muted-foreground text-xs tracking-wide">{detail}</p>
+			) : null}
+		</div>
+	);
+}
+
+function DetailCard({
+	title,
+	icon,
+	accent,
+	children,
+}: {
+	title: string;
+	icon: ReactNode;
+	accent: "cyan" | "pink" | "orange" | "purple";
+	children: React.ReactNode;
+}) {
+	const accentStyles = {
+		cyan: "border-neon-cyan/30 bg-neon-cyan/10 text-neon-cyan",
+		pink: "border-neon-pink/30 bg-neon-pink/10 text-neon-pink",
+		orange: "border-neon-orange/30 bg-neon-orange/10 text-neon-orange",
+		purple: "border-neon-purple/30 bg-neon-purple/10 text-neon-purple",
+	};
+
+	return (
+		<div className="rounded-none border border-border bg-card/50 p-5 backdrop-blur-sm">
+			<div className="mb-4 flex items-center gap-3 font-black text-xl tracking-wide">
+				<div
+					className={`flex h-10 w-10 items-center justify-center rounded-2xl border ${accentStyles[accent]}`}
+				>
+					{icon}
+				</div>
+				<span>{title}</span>
+			</div>
+			{children}
+		</div>
+	);
 }
 
 export function GameDetailClient({ game }: GameDetailClientProps) {
@@ -51,301 +129,268 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 			? Math.round((game.positiveReviews / totalReviews) * 100)
 			: 0;
 	const price = game.price ? Number(game.price) : 0;
+	const formattedRelease = new Date(game.releasedAt).toLocaleDateString("de-DE", {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	});
+	const [titleStart, ...titleRest] = game.name.split(" ");
+	const titleEnd = titleRest.join(" ");
 
 	return (
-		<main className="min-h-screen">
-			{/* Hero Section */}
-			<div className="relative overflow-hidden border-neon-cyan/10 border-b bg-secondary/30">
-				{/* Background Image */}
-				{game.image && (
-					<div className="absolute inset-0 -z-10">
-						<img
-							src={game.image}
-							alt={game.name}
-							className="h-full w-full object-cover opacity-20 blur-xl"
-						/>
-						<div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-					</div>
-				)}
+		<main className="relative min-h-screen overflow-hidden bg-background">
+			<div className="pointer-events-none absolute inset-0 -z-10">
+				<div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.7_0.2_180_/_0.02)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.7_0.2_180_/_0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+				<div className="absolute top-1/4 left-0 h-[520px] w-[520px] rounded-full bg-neon-cyan/8 blur-[140px]" />
+				<div className="absolute right-0 bottom-1/4 h-[460px] w-[460px] rounded-full bg-neon-pink/8 blur-[140px]" />
+			</div>
 
-				<div className="mx-auto max-w-7xl px-6 py-12">
-					{/* Back Button */}
-					<Link href="/#games">
-						<Button
-							variant="ghost"
-							className="mb-6 gap-2 text-neon-cyan hover:bg-neon-cyan/10 hover:text-neon-cyan"
-						>
-							<ArrowLeft className="h-4 w-4" />
-							<span className="font-bold tracking-wider">
-								ZURÜCK ZUR ÜBERSICHT
-							</span>
-						</Button>
-					</Link>
+			<div className="mx-auto max-w-7xl px-6 pt-10 pb-14 lg:pt-14 lg:pb-20">
+				<Link href="/#games">
+					<Button
+						variant="ghost"
+						className="mb-8 gap-2 text-neon-cyan hover:bg-neon-cyan/10 hover:text-neon-cyan"
+					>
+						<ArrowLeft className="h-4 w-4" />
+						<span className="font-bold text-xs tracking-[0.14em] uppercase">
+							Zurück zur Übersicht
+						</span>
+					</Button>
+				</Link>
 
-					<div className="flex flex-col gap-8 lg:flex-row lg:items-start">
-						{/* Game Image */}
-						<div className="flex-shrink-0">
+				<section className="p-1 md:p-2">
+					<div className="grid gap-8 lg:grid-cols-[minmax(0,460px)_1fr] lg:gap-10">
+						<div>
 							{game.image ? (
-								<div className="glow-cyan overflow-hidden rounded-2xl border border-neon-cyan/30 bg-neon-cyan/5 shadow-2xl">
+								<div className="overflow-hidden rounded-2xl border border-neon-cyan/30 bg-neon-cyan/5 shadow-2xl shadow-neon-cyan/10">
 									<img
 										src={game.image}
 										alt={game.name}
-										className="h-auto w-full lg:w-[460px]"
+										className="h-auto w-full"
 									/>
 								</div>
 							) : (
-								<div className="flex h-[215px] w-full items-center justify-center rounded-2xl border border-neon-cyan/30 bg-neon-cyan/5 lg:w-[460px]">
-									<Gamepad2 className="h-24 w-24 text-neon-cyan/30" />
+								<div className="flex min-h-[250px] items-center justify-center rounded-2xl border border-neon-cyan/30 bg-neon-cyan/5">
+									<Gamepad2 className="h-16 w-16 text-neon-cyan/35" />
 								</div>
 							)}
 						</div>
 
-						{/* Game Info */}
-						<div className="flex-1">
-							<h1 className="mb-4 font-black text-5xl text-glow-cyan text-neon-cyan tracking-tight">
-								{game.name}
+						<div className="min-w-0">
+							<h1 className="font-black text-4xl text-foreground tracking-tight sm:text-5xl lg:text-6xl">
+								<span className="text-[#C0C0C0]">{titleStart}</span>
+								{titleEnd ? <span className="text-neon-cyan"> {titleEnd}</span> : null}
 							</h1>
 
-							{game.shortDescription && (
-								<p className="mb-6 text-lg text-muted-foreground leading-relaxed">
+							{game.shortDescription ? (
+								<p className="mt-4 max-w-3xl text-base text-muted-foreground leading-relaxed md:text-lg">
 									{game.shortDescription}
 								</p>
-							)}
+							) : null}
 
-							{/* Key Stats */}
-							<div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-								{/* Rating */}
-								<div className="rounded-xl border border-neon-yellow/20 bg-neon-yellow/5 p-4">
-									<div className="mb-2 flex items-center gap-2 text-neon-yellow">
-										<Star className="h-5 w-5 fill-neon-yellow" />
-										<span className="font-bold text-xs tracking-wider">
-											BEWERTUNG
-										</span>
-									</div>
-									<p className="font-black text-2xl text-neon-yellow">
-										{totalReviews > 0 ? `${ratingPercentage}%` : "—"}
-									</p>
-									<p className="text-muted-foreground text-xs">
-										{totalReviews.toLocaleString()} Reviews
-									</p>
-								</div>
-
-								{/* Price */}
-								<div className="rounded-xl border border-neon-cyan/20 bg-neon-cyan/5 p-4">
-									<div className="mb-2 flex items-center gap-2 text-neon-cyan">
-										<DollarSign className="h-5 w-5" />
-										<span className="font-bold text-xs tracking-wider">
-											PREIS
-										</span>
-									</div>
-									{price === 0 ? (
-										<p className="font-black text-2xl text-neon-cyan">FREE</p>
-									) : (
-										<p className="font-black text-2xl text-foreground">
-											${price.toFixed(2)}
-										</p>
-									)}
-								</div>
-
-								{/* Release Date */}
-								<div className="rounded-xl border border-neon-pink/20 bg-neon-pink/5 p-4">
-									<div className="mb-2 flex items-center gap-2 text-neon-pink">
-										<Calendar className="h-5 w-5" />
-										<span className="font-bold text-xs tracking-wider">
-											RELEASE
-										</span>
-									</div>
-									<p className="font-black text-foreground text-lg">
-										{new Date(game.releasedAt).toLocaleDateString("de-DE", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})}
-									</p>
-								</div>
-
-								{/* Steam ID */}
-								<div className="rounded-xl border border-neon-purple/20 bg-neon-purple/5 p-4">
-									<div className="mb-2 flex items-center gap-2 text-neon-purple">
-										<Gamepad2 className="h-5 w-5" />
-										<span className="font-bold text-xs tracking-wider">
-											STEAM ID
-										</span>
-									</div>
-									<p className="font-black text-foreground text-lg">
-										{game.steamId}
-									</p>
-								</div>
+							<div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+								<StatTile
+									icon={<Star className="h-4 w-4 fill-current" />}
+									label="Bewertung"
+									value={totalReviews > 0 ? `${ratingPercentage}%` : "—"}
+									detail={`${totalReviews.toLocaleString()} Reviews`}
+									accent="yellow"
+								/>
+								<StatTile
+									icon={<DollarSign className="h-4 w-4" />}
+									label="Preis"
+									value={price === 0 ? "Kostenlos" : `$${price.toFixed(2)}`}
+									accent="cyan"
+								/>
+								<StatTile
+									icon={<Calendar className="h-4 w-4" />}
+									label="Release"
+									value={formattedRelease}
+									accent="pink"
+								/>
+								<StatTile
+									icon={<Gamepad2 className="h-4 w-4" />}
+									label="Steam ID"
+									value={String(game.steamId)}
+									accent="purple"
+								/>
 							</div>
 
-							{/* Website Link */}
-							{game.website && (
-								<a
-									href={game.website}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="inline-flex items-center gap-2 rounded-xl border border-neon-cyan/30 bg-neon-cyan/10 px-6 py-3 font-bold text-neon-cyan tracking-wider transition-all hover:border-neon-cyan/50 hover:bg-neon-cyan/20"
-								>
-									<Globe className="h-5 w-5" />
-									WEBSITE BESUCHEN
-								</a>
-							)}
+							{game.website ? (
+								<div className="mt-6">
+									<a
+										href={game.website}
+										target="_blank"
+										rel="noopener noreferrer"
+											className="inline-flex items-center gap-2 rounded-xl border border-neon-cyan/35 bg-neon-cyan/12 px-5 py-3 font-bold text-neon-cyan text-sm tracking-[0.1em] uppercase transition-all hover:border-neon-cyan/60 hover:bg-neon-cyan/20"
+									>
+										<Globe className="h-4 w-4" />
+										Website besuchen
+									</a>
+								</div>
+							) : null}
 						</div>
 					</div>
-				</div>
-			</div>
+				</section>
 
-			{/* Details Section */}
-			<div className="mx-auto max-w-7xl px-6 py-12">
-				<div className="grid gap-8 lg:grid-cols-2">
-					{/* Reviews Breakdown */}
-					<div className="rounded-2xl border border-neon-cyan/20 bg-card/50 p-6 backdrop-blur-sm">
-						<div className="mb-4 flex items-center gap-3">
-							<div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neon-cyan/30 bg-neon-cyan/10">
-								<Star className="h-6 w-6 text-neon-cyan" />
-							</div>
-							<h2 className="font-black text-2xl text-neon-cyan">
-								BEWERTUNGEN
-							</h2>
-						</div>
-
-						<div className="space-y-4">
-							{/* Positive Reviews */}
-							<div className="flex items-center justify-between rounded-lg border border-neon-cyan/10 bg-neon-cyan/5 p-4">
-								<div className="flex items-center gap-3">
-									<ThumbsUp className="h-5 w-5 text-neon-cyan" />
-									<span className="font-bold text-foreground">Positiv</span>
+				<section className="mt-8 grid gap-6 lg:grid-cols-2">
+					<DetailCard
+						title="Bewertungen"
+						icon={<Star className="h-5 w-5" />}
+						accent="cyan"
+					>
+						<div className="space-y-3">
+							<div className="flex items-center justify-between rounded-xl border border-neon-cyan/20 bg-neon-cyan/8 p-3">
+								<div className="flex items-center gap-2 text-neon-cyan">
+									<ThumbsUp className="h-4 w-4" />
+									<span className="font-semibold">Positiv</span>
 								</div>
-								<span className="font-black text-2xl text-neon-cyan">
+								<span className="font-black text-xl text-neon-cyan">
 									{game.positiveReviews.toLocaleString()}
 								</span>
 							</div>
-
-							{/* Negative Reviews */}
-							<div className="flex items-center justify-between rounded-lg border border-neon-pink/10 bg-neon-pink/5 p-4">
-								<div className="flex items-center gap-3">
-									<ThumbsDown className="h-5 w-5 text-neon-pink" />
-									<span className="font-bold text-foreground">Negativ</span>
+							<div className="flex items-center justify-between rounded-xl border border-neon-pink/20 bg-neon-pink/8 p-3">
+								<div className="flex items-center gap-2 text-neon-pink">
+									<ThumbsDown className="h-4 w-4" />
+									<span className="font-semibold">Negativ</span>
 								</div>
-								<span className="font-black text-2xl text-neon-pink">
+								<span className="font-black text-xl text-neon-pink">
 									{game.negativeReviews.toLocaleString()}
 								</span>
 							</div>
-
-							{/* Total */}
-							<div className="flex items-center justify-between rounded-lg border border-neon-yellow/10 bg-neon-yellow/5 p-4">
-								<span className="font-bold text-foreground">Gesamt</span>
-								<span className="font-black text-2xl text-neon-yellow">
+							<div className="flex items-center justify-between rounded-xl border border-neon-yellow/20 bg-neon-yellow/8 p-3">
+								<span className="font-semibold text-foreground">Gesamt</span>
+								<span className="font-black text-xl text-neon-yellow">
 									{totalReviews.toLocaleString()}
 								</span>
 							</div>
 						</div>
+					</DetailCard>
+
+					<div className="rounded-none border border-border bg-card/50 p-5 backdrop-blur-sm">
+						<div className="mb-4 flex items-center gap-3">
+							<div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-neon-orange/30 bg-neon-orange/10 text-neon-orange">
+								<Users className="h-5 w-5" />
+							</div>
+							<h3 className="font-black text-xl tracking-wide">
+								Entwickler & Publisher
+							</h3>
+						</div>
+						<div className="space-y-4">
+							<div>
+								<p className="mb-2 font-bold text-[11px] text-muted-foreground tracking-[0.16em] uppercase">
+									Entwickler
+								</p>
+								{game.developers.length > 0 ? (
+									<div className="flex flex-wrap gap-2">
+										{game.developers.map((dev) => (
+											<Badge
+												key={dev.developer.id}
+												className="border-neon-orange/25 bg-neon-orange/12 px-3 py-1.5 font-semibold text-neon-orange text-xs"
+											>
+												{dev.developer.name}
+											</Badge>
+										))}
+									</div>
+								) : (
+									<p className="text-muted-foreground text-sm">
+										Keine Entwickler angegeben
+									</p>
+								)}
+							</div>
+							<div>
+								<p className="mb-2 font-bold text-[11px] text-muted-foreground tracking-[0.16em] uppercase">
+									Publisher
+								</p>
+								{game.publishers.length > 0 ? (
+									<div className="flex flex-wrap gap-2">
+										{game.publishers.map((publisherItem) => (
+											<Badge
+												key={publisherItem.publisher.id}
+												className="border-neon-cyan/25 bg-neon-cyan/12 px-3 py-1.5 font-semibold text-neon-cyan text-xs"
+											>
+												{publisherItem.publisher.name}
+											</Badge>
+										))}
+									</div>
+								) : (
+									<p className="text-muted-foreground text-sm">
+										Keine Publisher angegeben
+									</p>
+								)}
+							</div>
+						</div>
 					</div>
 
-					{/* Developers */}
-					<div className="rounded-2xl border border-neon-cyan/20 bg-card/50 p-6 backdrop-blur-sm">
+					<div className="rounded-none border border-border bg-card/50 p-5 backdrop-blur-sm">
 						<div className="mb-4 flex items-center gap-3">
-							<div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neon-orange/30 bg-neon-orange/10">
-								<Users className="h-6 w-6 text-neon-orange" />
+							<div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-neon-pink/30 bg-neon-pink/10 text-neon-pink">
+								<Layers className="h-5 w-5" />
 							</div>
-							<h2 className="font-black text-2xl text-neon-orange">
-								ENTWICKLER
-							</h2>
+							<h3 className="font-black text-xl tracking-wide">Genres</h3>
 						</div>
-
-						{game.developers.length > 0 ? (
-							<div className="flex flex-wrap gap-2">
-								{game.developers.map((dev) => (
-									<Badge
-										key={dev.developer.id}
-										className="border-neon-orange/20 bg-neon-orange/10 px-4 py-2 font-bold text-neon-orange text-sm hover:bg-neon-orange/20"
-									>
-										{dev.developer.name}
-									</Badge>
-								))}
-							</div>
-						) : (
-							<p className="text-muted-foreground">
-								Keine Entwickler angegeben
-							</p>
-						)}
-					</div>
-
-					{/* Genres */}
-					<div className="rounded-2xl border border-neon-cyan/20 bg-card/50 p-6 backdrop-blur-sm">
-						<div className="mb-4 flex items-center gap-3">
-							<div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neon-pink/30 bg-neon-pink/10">
-								<Layers className="h-6 w-6 text-neon-pink" />
-							</div>
-							<h2 className="font-black text-2xl text-neon-pink">GENRES</h2>
-						</div>
-
 						{game.genres.length > 0 ? (
 							<div className="flex flex-wrap gap-2">
 								{game.genres.map((genreItem) => (
 									<Badge
 										key={genreItem.genre.id}
-										className="border-neon-pink/20 bg-neon-pink/10 px-4 py-2 font-bold text-neon-pink text-sm hover:bg-neon-pink/20"
+										className="border-neon-pink/25 bg-neon-pink/12 px-3 py-1.5 font-semibold text-neon-pink text-xs"
 									>
 										{genreItem.genre.name}
 									</Badge>
 								))}
 							</div>
 						) : (
-							<p className="text-muted-foreground">Keine Genres angegeben</p>
+							<p className="text-muted-foreground text-sm">Keine Genres angegeben</p>
 						)}
 					</div>
 
-					{/* Tags */}
-					<div className="rounded-2xl border border-neon-cyan/20 bg-card/50 p-6 backdrop-blur-sm">
+					<div className="rounded-none border border-border bg-card/50 p-5 backdrop-blur-sm">
 						<div className="mb-4 flex items-center gap-3">
-							<div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neon-cyan/30 bg-neon-cyan/10">
-								<Tag className="h-6 w-6 text-neon-cyan" />
+							<div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-neon-cyan/30 bg-neon-cyan/10 text-neon-cyan">
+								<Tag className="h-5 w-5" />
 							</div>
-							<h2 className="font-black text-2xl text-neon-cyan">TAGS</h2>
+							<h3 className="font-black text-xl tracking-wide">Tags</h3>
 						</div>
-
 						{game.tags.length > 0 ? (
 							<div className="flex flex-wrap gap-2">
 								{game.tags.map((tagItem) => (
 									<Badge
 										key={tagItem.tag.id}
 										variant="outline"
-										className="border-neon-cyan/20 bg-neon-cyan/5 px-3 py-1.5 font-medium text-muted-foreground text-xs hover:bg-neon-cyan/10"
+										className="border-neon-cyan/25 bg-neon-cyan/8 px-3 py-1.5 font-medium text-neon-cyan text-xs"
 									>
 										{tagItem.tag.name}
 									</Badge>
 								))}
 							</div>
 						) : (
-							<p className="text-muted-foreground">Keine Tags angegeben</p>
+							<p className="text-muted-foreground text-sm">Keine Tags angegeben</p>
 						)}
 					</div>
-				</div>
+				</section>
 
-				{/* Categories */}
-				{game.categories.length > 0 && (
-					<div className="mt-8 rounded-2xl border border-neon-cyan/20 bg-card/50 p-6 backdrop-blur-sm">
-						<div className="mb-4 flex items-center gap-3">
-							<div className="flex h-12 w-12 items-center justify-center rounded-xl border border-neon-purple/30 bg-neon-purple/10">
-								<Layers className="h-6 w-6 text-neon-purple" />
+				{game.categories.length > 0 ? (
+					<section className="mt-6">
+						<DetailCard
+							title="Features"
+							icon={<Layers className="h-5 w-5" />}
+							accent="purple"
+						>
+							<div className="flex flex-wrap gap-2">
+								{game.categories.map((catItem) => (
+									<Badge
+										key={catItem.category.id}
+										variant="outline"
+										className="border-neon-purple/25 bg-neon-purple/10 px-3 py-1.5 font-medium text-neon-purple text-xs"
+									>
+										{catItem.category.name}
+									</Badge>
+								))}
 							</div>
-							<h2 className="font-black text-2xl text-neon-purple">FEATURES</h2>
-						</div>
-
-						<div className="flex flex-wrap gap-2">
-							{game.categories.map((catItem) => (
-								<Badge
-									key={catItem.category.id}
-									variant="outline"
-									className="border-neon-purple/20 bg-neon-purple/5 px-3 py-1.5 font-medium text-muted-foreground text-xs hover:bg-neon-purple/10"
-								>
-									{catItem.category.name}
-								</Badge>
-							))}
-						</div>
-					</div>
-				)}
+						</DetailCard>
+					</section>
+				) : null}
 			</div>
 		</main>
 	);

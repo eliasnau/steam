@@ -122,11 +122,13 @@ export const gamesRouter = {
 				creatorName = creator?.name ?? null;
 			}
 
-			const [genreMap, tagMap, categoryMap, developerMap] = await Promise.all([
+			const [genreMap, tagMap, categoryMap, developerMap, publisherMap] =
+				await Promise.all([
 				DB.query.game.getGenresForGames([gameData.id]),
 				DB.query.game.getTagsForGames([gameData.id]),
 				DB.query.game.getCategoriesForGames([gameData.id]),
 				DB.query.game.getDevelopersForGames([gameData.id]),
+				DB.query.game.getPublishersForGames([gameData.id]),
 			]);
 
 			return {
@@ -136,6 +138,7 @@ export const gamesRouter = {
 				tags: tagMap.get(gameData.id) ?? [],
 				categories: categoryMap.get(gameData.id) ?? [],
 				developers: developerMap.get(gameData.id) ?? [],
+				publishers: publisherMap.get(gameData.id) ?? [],
 			};
 		}),
 
