@@ -6,6 +6,10 @@ import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+const serverOrigin =
+	process.env.NEXT_PUBLIC_APP_URL ??
+	(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3001");
+
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
@@ -20,7 +24,7 @@ export const queryClient = new QueryClient({
 });
 
 export const link = new RPCLink({
-  url: `${typeof window !== "undefined" ? window.location.origin : "http://localhost:3001"}/api/rpc`,
+  url: `${typeof window !== "undefined" ? window.location.origin : serverOrigin}/api/rpc`,
   fetch(url, options) {
     return fetch(url, {
       ...options,
