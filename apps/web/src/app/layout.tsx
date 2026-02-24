@@ -32,11 +32,11 @@ export default function RootLayout({
 			<body
 				className={`${lemonMilkRegular.variable} ${lemonMilkBold.variable} antialiased`}
 			>
-				<Providers>
 					<Suspense>
+				<Providers>
 						<div className="grid h-svh grid-rows-[auto_1fr]">{children}</div>
-					</Suspense>
 				</Providers>
+					</Suspense>
 			</body>
 		</html>
 	);
