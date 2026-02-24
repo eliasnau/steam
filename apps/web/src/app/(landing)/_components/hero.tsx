@@ -25,7 +25,7 @@ export function Hero({ totalGames }: HeroProps) {
 
 				<div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.7_0.2_180_/_0.03)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.7_0.2_180_/_0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
 
-				<div className="absolute top-1/3 left-1/4 h-[600px] w-[600px] animate-pulse-glow rounded-full bg-[#87FF00]/8 blur-[150px]" />
+				<div className="absolute top-1/3 left-1/4 h-[600px] w-[600px] animate-pulse-glow rounded-full bg-[#72F5F8]/20 blur-[150px]" />
 				<div
 					className="absolute right-1/4 bottom-1/3 h-[400px] w-[400px] animate-pulse-glow rounded-full bg-neon-pink/8 blur-[120px]"
 					style={{ animationDelay: "1s" }}
@@ -34,24 +34,24 @@ export function Hero({ totalGames }: HeroProps) {
 
 			<div className="mx-auto max-w-7xl px-6 py-20">
 				<div className="flex flex-col items-center text-center">
-					<h1 className="relative font-black text-6xl tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl">
+					<h1 className="relative [font-family:var(--font-lemon-milk-bold)] text-6xl tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl">
 						<span className="text-[#C0C0C0]">STEAM</span>
-						<span className="text-glow-[#87FF00] text-[#87FF00]">
+						<span className="bg-linear-to-b from-[#51A9F3] to-[#72F5F8] bg-clip-text text-transparent">
 							ENGINE
 						</span>
 					</h1>
 
 					<div className="mt-6 flex items-center gap-3">
-						<div className="h-px w-12 bg-gradient-to-r from-transparent to-[#87FF00]/60" />
-						<span className="font-bold text-[#87FF00]/60 text-xs tracking-[0.3em]">
+						<div className="h-px w-12 bg-gradient-to-r from-transparent to-[#72F5F8]/70" />
+						<span className="font-bold text-[#72F5F8]/70 text-xs tracking-[0.3em]">
 							Steam Spiele
 						</span>
-						<div className="h-px w-12 bg-gradient-to-l from-transparent to-[#87FF00]/60" />
+						<div className="h-px w-12 bg-gradient-to-l from-transparent to-[#72F5F8]/70" />
 					</div>
 
 					<p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground leading-relaxed md:text-xl">
 						Entdecke{" "}
-						<span className="font-semibold text-neon-cyan">
+						<span className="font-semibold text-[#51A9F3]">
 							{totalGames} Spiele
 						</span>{" "}
 						mit detaillierten Infos zu Genres, Tags, Preisen,
@@ -61,7 +61,7 @@ export function Hero({ totalGames }: HeroProps) {
 					<div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
 						<Button
 							size="lg"
-							className="glow-[#87FF00] h-14 bg-[#87FF00] px-10 font-bold text-base text-primary-foreground tracking-wider transition-all duration-300 hover:scale-105 hover:bg-[#87FF00]/90"
+							className="h-14 border-transparent bg-linear-to-b from-[#51A9F3] to-[#72F5F8] px-10 font-bold text-base text-primary-foreground tracking-wider shadow-none transition-all duration-300 before:hidden hover:scale-105 hover:from-[#4A9CE0] hover:to-[#66E3E6]"
 							render={(props) => (
 								<a {...props} href="#games" onClick={scrollToSection("games")}>
 									<Database className="mr-2 h-5 w-5" />
@@ -90,7 +90,7 @@ export function Hero({ totalGames }: HeroProps) {
 						<a
 							href="https://tx1q9eycmeeamfzu.public.blob.vercel-storage.com/SteamDB.odb"
 							download="SteamDB.odb"
-							className="inline-flex items-center gap-2 rounded-md border border-border/40 bg-card/20 px-3 py-1.5 text-muted-foreground text-xs tracking-wide transition-colors hover:border-[#87FF00]/40 hover:text-[#87FF00]"
+							className="inline-flex items-center gap-2 rounded-md border border-border/40 bg-card/20 px-3 py-1.5 text-muted-foreground text-xs tracking-wide transition-colors hover:border-[#72F5F8]/40 hover:text-[#51A9F3]"
 						>
 							<Download className="h-3.5 w-3.5" />
 							LibreOffice-Datenbank herunterladen

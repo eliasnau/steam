@@ -3,7 +3,7 @@
 import {
 	ArrowLeft,
 	Calendar,
-	DollarSign,
+	Euro,
 	Gamepad2,
 	Globe,
 	Layers,
@@ -63,17 +63,17 @@ function StatTile({
 	accent: "cyan" | "pink" | "yellow" | "purple";
 }) {
 	const accentStyles = {
-		cyan: "border-neon-cyan/25 bg-neon-cyan/8 text-neon-cyan",
-		pink: "border-neon-pink/25 bg-neon-pink/8 text-neon-pink",
-		yellow: "border-neon-yellow/25 bg-neon-yellow/8 text-neon-yellow",
-		purple: "border-neon-purple/25 bg-neon-purple/8 text-neon-purple",
+		cyan: "border-[#51A9F3]/35 bg-[#72F5F8]/14 text-[#51A9F3]",
+		pink: "border-[#7800FF]/30 bg-[#7800FF]/10 text-[#7800FF]",
+		yellow: "border-[#51A9F3]/25 bg-[#51A9F3]/10 text-[#51A9F3]",
+		purple: "border-[#7800FF]/30 bg-[#7800FF]/10 text-[#7800FF]",
 	};
 
 	return (
-		<div className="rounded-none border border-border bg-card/50 p-4 backdrop-blur-sm">
+		<div className="rounded-md border border-border bg-card/60 p-4 backdrop-blur-sm">
 			<div className="mb-3 flex items-center gap-2">
 				<div
-					className={`flex h-10 w-10 items-center justify-center rounded-2xl border ${accentStyles[accent]}`}
+					className={`flex h-10 w-10 items-center justify-center rounded-lg border ${accentStyles[accent]}`}
 				>
 					{icon}
 				</div>
@@ -101,17 +101,17 @@ function DetailCard({
 	children: React.ReactNode;
 }) {
 	const accentStyles = {
-		cyan: "border-neon-cyan/30 bg-neon-cyan/10 text-neon-cyan",
-		pink: "border-neon-pink/30 bg-neon-pink/10 text-neon-pink",
-		orange: "border-neon-orange/30 bg-neon-orange/10 text-neon-orange",
-		purple: "border-neon-purple/30 bg-neon-purple/10 text-neon-purple",
+		cyan: "border-[#51A9F3]/35 bg-[#72F5F8]/14 text-[#51A9F3]",
+		pink: "border-[#7800FF]/30 bg-[#7800FF]/10 text-[#7800FF]",
+		orange: "border-[#51A9F3]/35 bg-[#72F5F8]/14 text-[#51A9F3]",
+		purple: "border-[#7800FF]/30 bg-[#7800FF]/10 text-[#7800FF]",
 	};
 
 	return (
-		<div className="rounded-none border border-border bg-card/50 p-5 backdrop-blur-sm">
-			<div className="mb-4 flex items-center gap-3 font-black text-xl tracking-wide">
+		<div className="rounded-md border border-border bg-card/60 p-5 backdrop-blur-sm">
+			<div className="mb-4 flex items-center gap-3 border-border/70 border-b pb-3 font-black text-xl tracking-wide">
 				<div
-					className={`flex h-10 w-10 items-center justify-center rounded-2xl border ${accentStyles[accent]}`}
+					className={`flex h-10 w-10 items-center justify-center rounded-lg border ${accentStyles[accent]}`}
 				>
 					{icon}
 				</div>
@@ -140,16 +140,16 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 	return (
 		<main className="relative min-h-screen overflow-hidden bg-background">
 			<div className="pointer-events-none absolute inset-0 -z-10">
-				<div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.7_0.2_180_/_0.02)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.7_0.2_180_/_0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
-				<div className="absolute top-1/4 left-0 h-[520px] w-[520px] rounded-full bg-neon-cyan/8 blur-[140px]" />
-				<div className="absolute right-0 bottom-1/4 h-[460px] w-[460px] rounded-full bg-neon-pink/8 blur-[140px]" />
+				<div className="absolute inset-0 bg-[linear-gradient(to_right,rgb(81_169_243_/_0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgb(81_169_243_/_0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+				<div className="absolute top-1/4 left-0 h-[520px] w-[520px] rounded-full bg-[#72F5F8]/12 blur-[140px]" />
+				<div className="absolute right-0 bottom-1/4 h-[460px] w-[460px] rounded-full bg-[#7800FF]/10 blur-[140px]" />
 			</div>
 
 			<div className="mx-auto max-w-7xl px-6 pt-10 pb-14 lg:pt-14 lg:pb-20">
 				<Link href="/#games">
 					<Button
 						variant="ghost"
-						className="mb-8 gap-2 text-neon-cyan hover:bg-neon-cyan/10 hover:text-neon-cyan"
+						className="mb-8 gap-2 text-[#51A9F3] hover:bg-[#72F5F8]/15 hover:text-[#51A9F3]"
 					>
 						<ArrowLeft className="h-4 w-4" />
 						<span className="font-bold text-xs tracking-[0.14em] uppercase">
@@ -158,11 +158,11 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 					</Button>
 				</Link>
 
-				<section className="p-1 md:p-2">
+				<section>
 					<div className="grid gap-8 lg:grid-cols-[minmax(0,460px)_1fr] lg:gap-10">
 						<div>
 							{game.image ? (
-								<div className="overflow-hidden rounded-2xl border border-neon-cyan/30 bg-neon-cyan/5 shadow-2xl shadow-neon-cyan/10">
+								<div className="overflow-hidden rounded-md border border-[#51A9F3]/25 bg-[#72F5F8]/8 shadow-xl shadow-[#51A9F3]/10">
 									<img
 										src={game.image}
 										alt={game.name}
@@ -170,16 +170,21 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 									/>
 								</div>
 							) : (
-								<div className="flex min-h-[250px] items-center justify-center rounded-2xl border border-neon-cyan/30 bg-neon-cyan/5">
-									<Gamepad2 className="h-16 w-16 text-neon-cyan/35" />
+								<div className="flex min-h-[250px] items-center justify-center rounded-md border border-[#51A9F3]/25 bg-[#72F5F8]/8">
+									<Gamepad2 className="h-16 w-16 text-[#51A9F3]/35" />
 								</div>
 							)}
 						</div>
 
 						<div className="min-w-0">
-							<h1 className="font-black text-4xl text-foreground tracking-tight sm:text-5xl lg:text-6xl">
+							<h1 className="font-black text-4xl text-foreground tracking-tight sm:text-5xl lg:text-6xl [font-family:var(--font-lemon-milk-bold)]">
 								<span className="text-[#C0C0C0]">{titleStart}</span>
-								{titleEnd ? <span className="text-neon-cyan"> {titleEnd}</span> : null}
+								{titleEnd ? (
+									<span className="bg-linear-to-b from-[#51A9F3] to-[#72F5F8] bg-clip-text text-transparent">
+										{" "}
+										{titleEnd}
+									</span>
+								) : null}
 							</h1>
 
 							{game.shortDescription ? (
@@ -187,50 +192,59 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 									{game.shortDescription}
 								</p>
 							) : null}
-
-							<div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-								<StatTile
-									icon={<Star className="h-4 w-4 fill-current" />}
-									label="Bewertung"
-									value={totalReviews > 0 ? `${ratingPercentage}%` : "—"}
-									detail={`${totalReviews.toLocaleString()} Reviews`}
-									accent="yellow"
-								/>
-								<StatTile
-									icon={<DollarSign className="h-4 w-4" />}
-									label="Preis"
-									value={price === 0 ? "Kostenlos" : `$${price.toFixed(2)}`}
-									accent="cyan"
-								/>
-								<StatTile
-									icon={<Calendar className="h-4 w-4" />}
-									label="Release"
-									value={formattedRelease}
-									accent="pink"
-								/>
-								<StatTile
-									icon={<Gamepad2 className="h-4 w-4" />}
-									label="Steam ID"
-									value={String(game.steamId)}
-									accent="purple"
-								/>
-							</div>
-
-							{game.website ? (
-								<div className="mt-6">
-									<a
-										href={game.website}
-										target="_blank"
-										rel="noopener noreferrer"
-											className="inline-flex items-center gap-2 rounded-xl border border-neon-cyan/35 bg-neon-cyan/12 px-5 py-3 font-bold text-neon-cyan text-sm tracking-[0.1em] uppercase transition-all hover:border-neon-cyan/60 hover:bg-neon-cyan/20"
-									>
-										<Globe className="h-4 w-4" />
-										Website besuchen
-									</a>
-								</div>
-							) : null}
 						</div>
 					</div>
+				</section>
+
+				<section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+					<StatTile
+						icon={<Star className="h-4 w-4 fill-current" />}
+						label="Bewertung"
+						value={totalReviews > 0 ? `${ratingPercentage}%` : "—"}
+						detail={`${totalReviews.toLocaleString()} Reviews`}
+						accent="yellow"
+					/>
+					<StatTile
+						icon={<Euro className="h-4 w-4" />}
+						label="Preis"
+						value={price === 0 ? "Kostenlos" : `€${price.toFixed(2)}`}
+						accent="cyan"
+					/>
+					<StatTile
+						icon={<Calendar className="h-4 w-4" />}
+						label="Release"
+						value={formattedRelease}
+						accent="pink"
+					/>
+					<StatTile
+						icon={<Gamepad2 className="h-4 w-4" />}
+						label="Steam ID"
+						value={String(game.steamId)}
+						accent="purple"
+					/>
+				</section>
+
+				<section className="mt-4 flex flex-wrap items-center gap-5">
+					{game.website ? (
+						<a
+							href={game.website}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="inline-flex items-center gap-2 text-[#51A9F3] text-sm underline-offset-4 transition-colors hover:text-[#7800FF] hover:underline"
+						>
+							<Globe className="h-4 w-4" />
+							Offizielle Website
+						</a>
+					) : null}
+					<a
+						href={`https://store.steampowered.com/app/${game.steamId}/`}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="inline-flex items-center gap-2 text-[#51A9F3] text-sm underline-offset-4 transition-colors hover:text-[#7800FF] hover:underline"
+					>
+						<Gamepad2 className="h-4 w-4" />
+						Im Steam Store öffnen
+					</a>
 				</section>
 
 				<section className="mt-8 grid gap-6 lg:grid-cols-2">
@@ -240,36 +254,36 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 						accent="cyan"
 					>
 						<div className="space-y-3">
-							<div className="flex items-center justify-between rounded-xl border border-neon-cyan/20 bg-neon-cyan/8 p-3">
-								<div className="flex items-center gap-2 text-neon-cyan">
+							<div className="flex items-center justify-between rounded-md border border-[#51A9F3]/20 bg-[#72F5F8]/10 p-3">
+								<div className="flex items-center gap-2 text-[#51A9F3]">
 									<ThumbsUp className="h-4 w-4" />
 									<span className="font-semibold">Positiv</span>
 								</div>
-								<span className="font-black text-xl text-neon-cyan">
+								<span className="font-black text-xl text-[#51A9F3]">
 									{game.positiveReviews.toLocaleString()}
 								</span>
 							</div>
-							<div className="flex items-center justify-between rounded-xl border border-neon-pink/20 bg-neon-pink/8 p-3">
-								<div className="flex items-center gap-2 text-neon-pink">
+							<div className="flex items-center justify-between rounded-md border border-[#7800FF]/20 bg-[#7800FF]/8 p-3">
+								<div className="flex items-center gap-2 text-[#7800FF]">
 									<ThumbsDown className="h-4 w-4" />
 									<span className="font-semibold">Negativ</span>
 								</div>
-								<span className="font-black text-xl text-neon-pink">
+								<span className="font-black text-xl text-[#7800FF]">
 									{game.negativeReviews.toLocaleString()}
 								</span>
 							</div>
-							<div className="flex items-center justify-between rounded-xl border border-neon-yellow/20 bg-neon-yellow/8 p-3">
+							<div className="flex items-center justify-between rounded-md border border-border/60 bg-secondary/20 p-3">
 								<span className="font-semibold text-foreground">Gesamt</span>
-								<span className="font-black text-xl text-neon-yellow">
+								<span className="font-black text-xl text-foreground">
 									{totalReviews.toLocaleString()}
 								</span>
 							</div>
 						</div>
 					</DetailCard>
 
-					<div className="rounded-none border border-border bg-card/50 p-5 backdrop-blur-sm">
+					<div className="rounded-md border border-border bg-card/60 p-5 backdrop-blur-sm">
 						<div className="mb-4 flex items-center gap-3">
-							<div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-neon-orange/30 bg-neon-orange/10 text-neon-orange">
+							<div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#51A9F3]/35 bg-[#72F5F8]/14 text-[#51A9F3]">
 								<Users className="h-5 w-5" />
 							</div>
 							<h3 className="font-black text-xl tracking-wide">
@@ -286,7 +300,7 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 										{game.developers.map((dev) => (
 											<Badge
 												key={dev.developer.id}
-												className="border-neon-orange/25 bg-neon-orange/12 px-3 py-1.5 font-semibold text-neon-orange text-xs"
+												className="border-[#51A9F3]/25 bg-[#72F5F8]/12 px-3 py-1.5 font-semibold text-[#51A9F3] text-xs"
 											>
 												{dev.developer.name}
 											</Badge>
@@ -307,7 +321,7 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 										{game.publishers.map((publisherItem) => (
 											<Badge
 												key={publisherItem.publisher.id}
-												className="border-neon-cyan/25 bg-neon-cyan/12 px-3 py-1.5 font-semibold text-neon-cyan text-xs"
+												className="border-[#7800FF]/25 bg-[#7800FF]/10 px-3 py-1.5 font-semibold text-[#7800FF] text-xs"
 											>
 												{publisherItem.publisher.name}
 											</Badge>
@@ -322,9 +336,9 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 						</div>
 					</div>
 
-					<div className="rounded-none border border-border bg-card/50 p-5 backdrop-blur-sm">
+					<div className="rounded-md border border-border bg-card/60 p-5 backdrop-blur-sm">
 						<div className="mb-4 flex items-center gap-3">
-							<div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-neon-pink/30 bg-neon-pink/10 text-neon-pink">
+							<div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#7800FF]/30 bg-[#7800FF]/10 text-[#7800FF]">
 								<Layers className="h-5 w-5" />
 							</div>
 							<h3 className="font-black text-xl tracking-wide">Genres</h3>
@@ -334,7 +348,7 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 								{game.genres.map((genreItem) => (
 									<Badge
 										key={genreItem.genre.id}
-										className="border-neon-pink/25 bg-neon-pink/12 px-3 py-1.5 font-semibold text-neon-pink text-xs"
+										className="border-[#7800FF]/25 bg-[#7800FF]/10 px-3 py-1.5 font-semibold text-[#7800FF] text-xs"
 									>
 										{genreItem.genre.name}
 									</Badge>
@@ -345,9 +359,9 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 						)}
 					</div>
 
-					<div className="rounded-none border border-border bg-card/50 p-5 backdrop-blur-sm">
+					<div className="rounded-md border border-border bg-card/60 p-5 backdrop-blur-sm">
 						<div className="mb-4 flex items-center gap-3">
-							<div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-neon-cyan/30 bg-neon-cyan/10 text-neon-cyan">
+							<div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#51A9F3]/35 bg-[#72F5F8]/14 text-[#51A9F3]">
 								<Tag className="h-5 w-5" />
 							</div>
 							<h3 className="font-black text-xl tracking-wide">Tags</h3>
@@ -358,7 +372,7 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 									<Badge
 										key={tagItem.tag.id}
 										variant="outline"
-										className="border-neon-cyan/25 bg-neon-cyan/8 px-3 py-1.5 font-medium text-neon-cyan text-xs"
+										className="border-[#51A9F3]/25 bg-[#72F5F8]/10 px-3 py-1.5 font-medium text-[#51A9F3] text-xs"
 									>
 										{tagItem.tag.name}
 									</Badge>
@@ -382,7 +396,7 @@ export function GameDetailClient({ game }: GameDetailClientProps) {
 									<Badge
 										key={catItem.category.id}
 										variant="outline"
-										className="border-neon-purple/25 bg-neon-purple/10 px-3 py-1.5 font-medium text-neon-purple text-xs"
+										className="border-[#7800FF]/25 bg-[#7800FF]/10 px-3 py-1.5 font-medium text-[#7800FF] text-xs"
 									>
 										{catItem.category.name}
 									</Badge>

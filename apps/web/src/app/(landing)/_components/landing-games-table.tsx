@@ -40,9 +40,9 @@ const ITEMS_PER_PAGE = 8;
 const priceRanges = [
 	{ label: "Alle Preise", value: "all" },
 	{ label: "Free to Play", value: "free" },
-	{ label: "Unter $20", value: "under20" },
-	{ label: "$20 - $40", value: "20to40" },
-	{ label: "$40+", value: "over40" },
+	{ label: "Unter €20", value: "under20" },
+	{ label: "€20 - €40", value: "20to40" },
+	{ label: "€40+", value: "over40" },
 ] as const;
 
 type PriceRangeValue = (typeof priceRanges)[number]["value"];
@@ -97,7 +97,7 @@ function GameRow({
 
 			{/* Name + Developer */}
 			<div className="min-w-0 flex-1">
-				<p className="truncate font-bold text-sm transition-colors group-hover:text-neon-cyan">
+				<p className="truncate font-bold text-sm transition-colors group-hover:text-[#51A9F3]">
 					{game.name}
 				</p>
 				<p className="mt-0.5 truncate text-muted-foreground text-xs">
@@ -153,12 +153,12 @@ function GameRow({
 			{/* Price */}
 			<div className="w-20 shrink-0 text-right">
 				{price === 0 ? (
-					<Badge className="border-neon-cyan/30 bg-neon-cyan/10 font-black text-neon-cyan text-xs tracking-wider">
+					<Badge className="border-[#51A9F3]/30 bg-[#72F5F8]/15 font-black text-[#51A9F3] text-xs tracking-wider">
 						FREE
 					</Badge>
 				) : (
 					<span className="font-black text-sm">
-						${price.toFixed(2)}
+						€{price.toFixed(2)}
 					</span>
 				)}
 			</div>
@@ -224,7 +224,7 @@ export function LandingGamesTable() {
 		<section id="games" className="relative bg-background">
 			{/* Background - same as analytics */}
 			<div className="absolute inset-0 -z-10">
-				<div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.7_0.2_180_/_0.02)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.7_0.2_180_/_0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+				<div className="absolute inset-0 bg-[linear-gradient(to_right,rgb(81_169_243_/_0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgb(81_169_243_/_0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
 				<div className="absolute top-1/4 left-0 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]" />
 				<div className="absolute right-0 bottom-1/4 h-[400px] w-[400px] rounded-full bg-accent/5 blur-[100px]" />
 			</div>
@@ -232,11 +232,13 @@ export function LandingGamesTable() {
 			<div className="mx-auto max-w-7xl px-6 py-20 lg:py-28">
 				{/* Section header - matches analytics style */}
 				<div className="mb-16 flex flex-col items-center text-center">
-					<div className="glow-cyan mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-neon-cyan/30 bg-neon-cyan/10">
-						<Gamepad2 className="h-8 w-8 text-neon-cyan" />
+					<div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#51A9F3]/30 bg-[#72F5F8]/15">
+						<Gamepad2 className="h-8 w-8 text-[#51A9F3]" />
 					</div>
-					<h2 className="font-black text-4xl tracking-tight md:text-5xl">
-						<span className="text-glow-cyan text-neon-cyan">GAMES</span>{" "}
+					<h2 className="[font-family:var(--font-lemon-milk-bold)] text-4xl tracking-tight md:text-5xl">
+						<span className="bg-linear-to-b from-[#51A9F3] to-[#72F5F8] bg-clip-text text-transparent">
+							GAMES
+						</span>{" "}
 						DATABASE
 					</h2>
 					<p className="mt-4 max-w-xl text-lg text-muted-foreground">
@@ -248,8 +250,8 @@ export function LandingGamesTable() {
 				<Card className="mb-8 border-border bg-card/50 backdrop-blur-sm">
 					<CardHeader className="pb-2">
 						<div className="flex items-center gap-3">
-							<div className="flex h-10 w-10 items-center justify-center rounded-xl border border-neon-cyan/30 bg-neon-cyan/10">
-								<SlidersHorizontal className="h-5 w-5 text-neon-cyan" />
+							<div className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#51A9F3]/30 bg-[#72F5F8]/15">
+								<SlidersHorizontal className="h-5 w-5 text-[#51A9F3]" />
 							</div>
 							<div>
 								<CardTitle className="font-black text-lg tracking-wide">
@@ -258,7 +260,7 @@ export function LandingGamesTable() {
 								<CardDescription>
 									{data ? (
 										<>
-											<span className="font-bold text-foreground">
+											<span className="font-bold text-[#51A9F3]">
 												{data.pagination.totalCount}
 											</span>{" "}
 											Spiele gefunden
@@ -366,8 +368,8 @@ export function LandingGamesTable() {
 					{isPending ? (
 						<Card className="border-border bg-card/50 backdrop-blur-sm">
 							<CardContent className="flex flex-col items-center justify-center gap-4 py-16">
-								<div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-neon-cyan/20 bg-neon-cyan/5">
-									<Gamepad2 className="h-8 w-8 animate-pulse text-neon-cyan/50" />
+								<div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[#51A9F3]/20 bg-[#72F5F8]/10">
+									<Gamepad2 className="h-8 w-8 animate-pulse text-[#51A9F3]/60" />
 								</div>
 								<p className="font-medium text-muted-foreground">
 									Lade Spiele...
@@ -377,8 +379,8 @@ export function LandingGamesTable() {
 					) : !data?.data.length ? (
 						<Card className="border-border bg-card/50 backdrop-blur-sm">
 							<CardContent className="flex flex-col items-center justify-center gap-4 py-16">
-								<div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-neon-cyan/20 bg-neon-cyan/5">
-									<Search className="h-8 w-8 text-neon-cyan/50" />
+								<div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[#51A9F3]/20 bg-[#72F5F8]/10">
+									<Search className="h-8 w-8 text-[#51A9F3]/60" />
 								</div>
 								<p className="font-medium text-muted-foreground">
 									Keine Spiele gefunden, die deinen Kriterien entsprechen

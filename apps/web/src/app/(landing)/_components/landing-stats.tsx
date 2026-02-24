@@ -3,7 +3,7 @@
 import {
 	BarChart3,
 	Building2,
-	DollarSign,
+	Euro,
 	Gamepad2,
 	Star,
 	Tag,
@@ -50,9 +50,9 @@ interface LandingStatsProps {
 }
 
 const COLORS = [
-	"oklch(0.7 0.2 180)", 
+	"oklch(0.7 0.2 180)",
 	"oklch(0.65 0.25 320)",
-	"oklch(0.75 0.18 90)", 
+	"oklch(0.75 0.18 90)",
 	"oklch(0.6 0.2 260)",
 	"oklch(0.7 0.22 30)",
 ];
@@ -61,10 +61,10 @@ const chartConfig = {
 	count: { label: "Spiele", color: "oklch(0.7 0.2 180)" },
 	name: { label: "Genre" },
 	Kostenlos: { label: "Kostenlos", color: "oklch(0.7 0.2 180)" },
-	"Unter $10": { label: "Unter $10", color: "oklch(0.65 0.25 320)" },
-	"Unter $20": { label: "Unter $20", color: "oklch(0.75 0.18 90)" },
-	"Unter $50": { label: "Unter $50", color: "oklch(0.6 0.2 260)" },
-	"Über $50": { label: "Über $50", color: "oklch(0.7 0.22 30)" },
+	"Unter €10": { label: "Unter €10", color: "oklch(0.65 0.25 320)" },
+	"Unter €20": { label: "Unter €20", color: "oklch(0.75 0.18 90)" },
+	"Unter €50": { label: "Unter €50", color: "oklch(0.6 0.2 260)" },
+	"Über €50": { label: "Über €50", color: "oklch(0.7 0.22 30)" },
 } satisfies import("@/components/ui/chart").ChartConfig;
 
 export function LandingStats({
@@ -100,7 +100,7 @@ export function LandingStats({
 					<div className="glow-pink mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-neon-pink/30 bg-neon-pink/10">
 						<BarChart3 className="h-8 w-8 text-neon-pink" />
 					</div>
-					<h2 className="font-black text-4xl tracking-tight md:text-5xl">
+					<h2 className="[font-family:var(--font-lemon-milk-bold)] text-4xl tracking-tight md:text-5xl">
 						<span className="text-glow-pink text-neon-pink">ANALYTICS</span>{" "}
 						DASHBOARD
 					</h2>
@@ -136,14 +136,14 @@ export function LandingStats({
 						<div className="absolute inset-0 bg-gradient-to-br from-neon-cyan/20 to-neon-cyan/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 						<CardContent className="relative flex items-center gap-5 p-6">
 							<div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-neon-cyan/30 bg-neon-cyan/10">
-								<DollarSign className="h-8 w-8 text-neon-cyan" />
+								<Euro className="h-8 w-8 text-neon-cyan" />
 							</div>
 							<div>
 								<p className="font-bold text-[10px] text-muted-foreground tracking-[0.2em]">
 									Ø PREIS
 								</p>
 								<p className="font-black text-4xl tracking-tight">
-									${stats.avgPrice ? Number(stats.avgPrice).toFixed(0) : 0}
+									€{stats.avgPrice ? Number(stats.avgPrice).toFixed(0) : 0}
 								</p>
 							</div>
 						</CardContent>
@@ -254,7 +254,7 @@ export function LandingStats({
 						<CardHeader className="pb-2">
 							<div className="flex items-center gap-3">
 								<div className="flex h-10 w-10 items-center justify-center rounded-xl border border-neon-pink/30 bg-neon-pink/10">
-									<DollarSign className="h-5 w-5 text-neon-pink" />
+									<Euro className="h-5 w-5 text-neon-pink" />
 								</div>
 								<div>
 									<CardTitle className="font-black text-lg tracking-wide">
@@ -319,7 +319,7 @@ export function LandingStats({
 							</div>
 						</CardContent>
 					</Card>
-					
+
 					<Card className="border-border bg-card/50 backdrop-blur-sm lg:col-span-2">
 						<CardHeader className="pb-2">
 							<div className="flex items-center gap-3">
@@ -428,7 +428,7 @@ export function LandingStats({
 										<div className="text-center">
 											<span className="font-bold text-sm">
 												{game.price
-													? `$${Number(game.price).toFixed(2)}`
+													? `€${Number(game.price).toFixed(2)}`
 													: "Kostenlos"}
 											</span>
 										</div>

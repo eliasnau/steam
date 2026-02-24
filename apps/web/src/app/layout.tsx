@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
-import localFont from 'next/font/local'
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 
 import "../index.css";
 import Providers from "@/components/providers";
 import { Suspense } from "react";
 
-const geistSans = localFont({
-  src: './LEMONMILK-Regular.otf',
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const lemonMilkRegular = localFont({
+	src: "./LEMONMILK-Regular.otf",
+	variable: "--font-lemon-milk",
+	subsets: ["latin"],
 });
 
-const geistMono = localFont({
-  src: './LEMONMILK-Regular.otf',
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const lemonMilkBold = localFont({
+	src: "../font/LEMONMILK-Bold.otf",
+	variable: "--font-lemon-milk-bold",
+	subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -24,21 +23,21 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Suspense>
-        <Providers>
-          <div className="grid grid-rows-[auto_1fr] h-svh">
-            {children}
-          </div>
-        </Providers>
-        </Suspense>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en" suppressHydrationWarning>
+			<body
+				className={`${lemonMilkRegular.variable} ${lemonMilkBold.variable} antialiased`}
+			>
+				<Providers>
+					<Suspense>
+						<div className="grid h-svh grid-rows-[auto_1fr]">{children}</div>
+					</Suspense>
+				</Providers>
+			</body>
+		</html>
+	);
 }

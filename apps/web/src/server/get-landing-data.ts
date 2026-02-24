@@ -96,7 +96,7 @@ export const getLandingData = async () => {
 					sql`case when (${game.positiveReviews} + ${game.negativeReviews}) > 0 then ${game.positiveReviews}::float / (${game.positiveReviews} + ${game.negativeReviews}) else 0 end`,
 				),
 			)
-			.limit(12),
+			.limit(5),
 
 		db
 			.select({
@@ -128,20 +128,20 @@ export const getLandingData = async () => {
 			.select({
 				range: sql<string>`case
 					when ${game.price} = 0 or ${game.price} is null then 'Kostenlos'
-					when ${game.price} > 0 and ${game.price} <= 10 then 'Unter $10'
-					when ${game.price} > 10 and ${game.price} <= 20 then 'Unter $20'
-					when ${game.price} > 20 and ${game.price} <= 50 then 'Unter $50'
-					else 'Über $50'
+					when ${game.price} > 0 and ${game.price} <= 10 then 'Unter €10'
+					when ${game.price} > 10 and ${game.price} <= 20 then 'Unter €20'
+					when ${game.price} > 20 and ${game.price} <= 50 then 'Unter €50'
+					else 'Über €50'
 				end`.as("range"),
 				count: count(),
 			})
 			.from(game)
 			.groupBy(sql`case
 				when ${game.price} = 0 or ${game.price} is null then 'Kostenlos'
-				when ${game.price} > 0 and ${game.price} <= 10 then 'Unter $10'
-				when ${game.price} > 10 and ${game.price} <= 20 then 'Unter $20'
-				when ${game.price} > 20 and ${game.price} <= 50 then 'Unter $50'
-				else 'Über $50'
+				when ${game.price} > 0 and ${game.price} <= 10 then 'Unter €10'
+				when ${game.price} > 10 and ${game.price} <= 20 then 'Unter €20'
+				when ${game.price} > 20 and ${game.price} <= 50 then 'Unter €50'
+				else 'Über €50'
 			end`)
 			.orderBy(sql`min(case
 				when ${game.price} = 0 or ${game.price} is null then 1
