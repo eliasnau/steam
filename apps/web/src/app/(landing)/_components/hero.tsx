@@ -1,8 +1,16 @@
 "use client";
 
-import { Database, Download, TrendingUp } from "lucide-react";
+import { Database, Download, ExternalLink, FolderOpen, TrendingUp } from "lucide-react";
 import type { MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogDescription,
+	DialogHeader,
+	DialogPopup,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface HeroProps {
 	totalGames: number;
@@ -86,16 +94,47 @@ export function Hero({ totalGames }: HeroProps) {
 						/>
 					</div>
 
-					<div className="mt-6">
-						<a
-							href="https://tx1q9eycmeeamfzu.public.blob.vercel-storage.com/SteamDB.odb"
-							download="SteamDB.odb"
-							className="inline-flex items-center gap-2 rounded-md border border-border/40 bg-card/20 px-3 py-1.5 text-muted-foreground text-xs tracking-wide transition-colors hover:border-[#72F5F8]/40 hover:text-[#51A9F3]"
-						>
-							<Download className="h-3.5 w-3.5" />
-							LibreOffice-Datenbank herunterladen
-						</a>
-					</div>
+					<Dialog>
+						<DialogTrigger render={<Button variant="outline" className="mt-8 h-11 border-border/50 bg-card/20 px-6 text-muted-foreground tracking-wide hover:border-[#72F5F8]/40 hover:text-[#51A9F3]" />}>
+							<FolderOpen className="mr-2 h-4 w-4" />
+							Ressourcen
+						</DialogTrigger>
+						<DialogPopup className="max-w-xl">
+							<DialogHeader>
+								<DialogTitle>Ressourcen</DialogTitle>
+								<DialogDescription>
+									Alle Projekt Ressourcen.
+								</DialogDescription>
+							</DialogHeader>
+							<div className="grid gap-2 px-6 pb-6 sm:grid-cols-3">
+								<a
+									href="https://steamengine-info.notion.site/"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="inline-flex items-center justify-center gap-2 rounded-md border border-border/40 bg-card/30 px-3 py-2 text-muted-foreground text-xs tracking-wide transition-colors hover:border-[#72F5F8]/40 hover:text-[#51A9F3]"
+								>
+									<ExternalLink className="h-3.5 w-3.5" />
+									Notion (Infos, Aufgabe)
+								</a>
+								<a
+									href="https://tx1q9eycmeeamfzu.public.blob.vercel-storage.com/SteamDB.odb"
+									download="SteamDB.odb"
+									className="inline-flex items-center justify-center gap-2 rounded-md border border-border/40 bg-card/30 px-3 py-2 text-muted-foreground text-xs tracking-wide transition-colors hover:border-[#72F5F8]/40 hover:text-[#51A9F3]"
+								>
+									<Download className="h-3.5 w-3.5" />
+									Libre Office DB Download
+								</a>
+								<a
+									href="https://tx1q9eycmeeamfzu.public.blob.vercel-storage.com/SteamEngine.key"
+									download="SteamEngine.key"
+									className="inline-flex items-center justify-center gap-2 rounded-md border border-border/40 bg-card/30 px-3 py-2 text-muted-foreground text-xs tracking-wide transition-colors hover:border-[#72F5F8]/40 hover:text-[#51A9F3]"
+								>
+									<Download className="h-3.5 w-3.5" />
+									Keynote Präsentation
+								</a>
+							</div>
+						</DialogPopup>
+					</Dialog>
 				</div>
 			</div>
 		</section>
