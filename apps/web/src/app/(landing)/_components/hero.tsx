@@ -117,8 +117,8 @@ export function Hero({ totalGames }: HeroProps) {
 									Notion (Infos, Aufgabe)
 								</a>
 								<a
-									href="https://tx1q9eycmeeamfzu.public.blob.vercel-storage.com/SteamDB.odb"
-									download="SteamDB.odb"
+									href="https://tx1q9eycmeeamfzu.public.blob.vercel-storage.com/SteamEngine.odb"
+									download="SteamEngine.odb"
 									className="inline-flex items-center justify-center gap-2 rounded-md border border-border/40 bg-card/30 px-3 py-2 text-muted-foreground text-xs tracking-wide transition-colors hover:border-[#72F5F8]/40 hover:text-[#51A9F3]"
 								>
 									<Download className="h-3.5 w-3.5" />
