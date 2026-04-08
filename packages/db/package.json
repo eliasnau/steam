@@ -22,7 +22,7 @@
 		"@neondatabase/serverless": "^1.0.2",
 		"@repo/env": "workspace:*",
 		"dotenv": "catalog:",
-		"drizzle-orm": "^0.45.1",
+		"drizzle-orm": "^0.45.2",
 		"ws": "^8.18.3",
 		"zod": "catalog:"
 	},
